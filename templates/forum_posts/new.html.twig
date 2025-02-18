@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau post{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center my-4">Créer un nouveau post</h1>
+
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="mb-3">
+                    {{ form_label(form.title, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.title, {'attr': {'class': 'form-control', 'placeholder': 'Entrez un titre'}}) }}
+                    {{ form_errors(form.title) }} {# Afficher les erreurs de validation pour le champ title #}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.content, 'Contenu', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Quoi de neuf ?', 'rows': 4}}) }}
+                    {{ form_errors(form.content) }} {# Afficher les erreurs de validation pour le champ content #}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.category, 'Catégorie', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.category) }} {# Afficher les erreurs de validation pour le champ category #}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.tags, 'Tags', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.tags, {'attr': {'class': 'form-control', 'placeholder': 'Ajoutez des tags (séparés par des virgules)'}}) }}
+                    {{ form_errors(form.tags) }} {# Afficher les erreurs de validation pour le champ tags #}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.attachment, 'Pièces jointes', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.attachment, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.attachment) }} {# Afficher les erreurs de validation pour le champ attachments #}
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Publier
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ path('app_forum_posts_index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+{% endblock %}

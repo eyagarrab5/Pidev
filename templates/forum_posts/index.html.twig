@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forum{% endblock %}
+
+
+{% block body %}
+
+    <div class="container">
+        <h1 class="text-center my-4">Forum </h1>
+
+         <!-- Formulaire de recherche et de tri -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form action="{{ path('app_forum_posts_index') }}" method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Rechercher un post..." value="{{ app.request.query.get('search') }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Rechercher
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form action="{{ path('app_forum_posts_index') }}" method="get" class="d-flex">
+                    <select name="sort" class="form-select me-2" onchange="this.form.submit()">
+                        <option value="newest" {% if app.request.query.get('sort') == 'newest' %}selected{% endif %}>Plus récent</option>
+                        <option value="oldest" {% if app.request.query.get('sort') == 'oldest' %}selected{% endif %}>Plus ancien</option>
+                        <option value="most_liked" {% if app.request.query.get('sort') == 'most_liked' %}selected{% endif %}>Plus aimés</option>
+                        <option value="least_liked" {% if app.request.query.get('sort') == 'least_liked' %}selected{% endif %}>Moins aimés</option>
+                    </select>
+                                    </form>
+            </div>
+        </div>
+
+        <!-- Bouton pour créer un nouveau post -->
+        <div class="text-end mb-4">
+            <a href="{{ path('app_forum_posts_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Créer un nouveau post
+            </a>
+        </div>
+
+        <!-- Liste des Posts -->
+        {% for forum_post in forum_posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ forum_post.title }}</h5>
+                    <p class="card-text">{{ forum_post.content }}</p>
+                    <p class="text-muted small">
+                        Posté par : {{ forum_post.user.firstName }} {{ forum_post.user.lastName }}
+                        le {{ forum_post.createdAt|date('d/m/Y H:i') }}
+                        {% if forum_post.updatedAt %}
+                            | Dernière modification le {{ forum_post.updatedAt|date('d/m/Y H:i') }}
+                        {% endif %}
+                    </p>
+                       {% if forum_post.attachment %} {# Utilisez "attachment" sans "s" #}
+                <p>
+                    <strong>Pièce jointe :</strong>
+                    <a href="{{ asset('uploads/' ~ forum_post.attachment) }}" target="_blank">Télécharger</a>
+                </p>
+            {% endif %}
+                </div>
+                <!-- Boutons Like et Commenter -->
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Bouton Like -->
+                        <form action="{{ path('app_forum_posts_like', {'id': forum_post.id}) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-thumbs-up"></i> J'aime
+                            </button>
+                        </form>
+                        <span class="badge bg-secondary">{{ forum_post.likes }} Likes</span>
+
+                        <!-- Bouton Commenter -->
+                        <button class="btn btn-outline-success btn-sm" data-bs-toggle="collapse" data-bs-target="#comments-{{ forum_post.id }}">
+                            <i class="fas fa-comment"></i> Commenter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section des Commentaires (masquée par défaut) -->
+                <div id="comments-{{ forum_post.id }}" class="collapse">
+                    <div class="card-body">
+                        <h6>Commentaires :</h6>
+                        {% if forum_post.comments|length > 0 %}
+                            <ul class="list-group list-group-flush">
+                                {% for comment in forum_post.comments %}
+                                    <li class="list-group-item">
+                                        <p>{{ comment.content }}</p>
+                                        <small class="text-muted">
+                                            Posté le {{ comment.createdAt|date('d/m/Y H:i') }}
+                                            {% if comment.updatedAt %}
+                                                | Modifié le {{ comment.updatedAt|date('d/m/Y H:i') }}
+                                            {% endif %}
+                                        </small>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">Aucun commentaire pour le moment.</p>
+                        {% endif %}
+
+                        <!-- Formulaire pour ajouter un commentaire -->
+                        <form action="{{ path('app_comments_new', {'postId': forum_post.id}) }}" method="post" class="mt-3">
+                           <!-- <div class="form-group">
+                                <textarea name="content" class="form-control" rows="3" placeholder="Ajouter un commentaire..." required></textarea>
+                            </div>-->
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">Commenter</button>
+                        </form>
+                    </div>
+        <div class="col-md-6">
+            <strong>Tags :</strong> {{ forum_post.tags }}
+        </div>
+    </div>
+   
+</div>
+
+                <!-- Actions (show, edit) -->
+                <div class="card-footer">
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ path('app_forum_posts_show', {'id': forum_post.id}) }}" class="btn btn-info btn-sm me-2">
+                            <i class="fas fa-eye"></i> Voir
+                        </a>
+                        <a href="{{ path('app_forum_posts_edit', {'id': forum_post.id}) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Aucun post trouvé.
+            </div>
+        {% endfor %}
+            <div class="navigation">
+                {{ knp_pagination_render(forum_posts) }}
+            </div>
+    </div>
+{% endblock %}
