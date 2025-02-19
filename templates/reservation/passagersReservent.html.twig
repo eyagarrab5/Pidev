@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des réservations reçues à mes demandes{% endblock %}
+
+{% block body %}
+
+    <div class="list-wrapper">
+    <img src="{{ asset('img/pic15.png') }}" 
+             alt="Image de confirmation" 
+             class="img-fluid mb-0" 
+             style="border-radius: 8px; width: 220px; display: block; margin: 0 auto; margin-top: -92px">
+<h1>Liste des passagers ayant réservé mon offre</h1>
+        {% for reservation in reservations %}
+            <div class="proposition-item">
+                <div class="proposition-info">
+                    <strong>Nom Passager:</strong> Passager 2
+                </div>
+                   <div class="proposition-info">
+                    <strong>Num Passager:</strong> 25883328
+                </div>
+                <div class="proposition-actions">
+                    <a href="#">Sélectionner</a>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucune proposition trouvée.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+ /* Ajoutez l'image de fond directement ici */
+
+    body {
+        background-image: url('{{ asset('img/pic5.jpg') }}'); /* Définir le GIF comme arrière-plan */
+        background-size: cover; /* Couvrir toute la zone */
+        background-position: center; /* Centrer l'image */
+        background-repeat: no-repeat; /* Ne pas répéter l'image */
+    }
+
+        h1 {
+    text-align: center;
+    color: #07005a;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+        }
+
+        .list-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .proposition-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .proposition-info {
+            font-size: 1rem;
+        }
+
+        .proposition-actions a {
+            text-decoration: none;
+            background-color: #4e73df;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .proposition-actions a:hover {
+            background-color: #375ac2;
+        }
+    </style>
+{% endblock %}

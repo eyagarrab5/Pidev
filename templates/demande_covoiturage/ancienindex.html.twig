@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demandes Covoiturages disponibles{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('styles/demande.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="container " style="margin-top:-4.5rem!important">
+<!-- Ajouter le GIF en haut de la page -->
+<div class="gif-container" style="margin-left: 330px;margin-bottom: 39px;">
+<img src="{{ asset('img/gif.gif') }}" alt="GIF animée" style="max-width: 300px; height: auto;border-radius: 5%;">
+<span>Des passagers en attente, à vous de jouer !</span>
+</div>
+
+
+    <div class="demandes-container">
+        {% for demande_covoiturage in demande_covoiturages %}
+            <div class="demande-card">
+                <div class="demande-info">
+                    <p>Mohammed 1</p>     <!-- khater baed bech nhez nom user eli snae demande -->
+                    <p><strong>Départ:</strong> {{ demande_covoiturage.depart }}</p>
+                    <p><strong>Destination:</strong> {{ demande_covoiturage.destination }}</p>
+                    <p><strong>Date:</strong> {{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}</p>
+                    <p><strong>Budget:</strong> {{ demande_covoiturage.budget }} dt</p>
+                </div>
+
+                <div class="demande-actions">
+                    <a href="#" class="btn btn-propose" data-id="{{ demande_covoiturage.id }}" data-bs-toggle="modal" data-bs-target="#confirmationModal">Proposer</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="no-records">
+                Aucune demande trouvée.
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Fenêtre modale de confirmation -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"> <!-- Ajout de la classe ici -->
+        <div class="modal-content" style='width:80%'>
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel" style="display: flex; justify-content: center;">Confirmation</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <img src="{{ asset('img/pic8.jpg') }}" 
+                                     alt="Image de confirmation" 
+                                     class="img-fluid mb-3" 
+                                     style="border-radius: 8px; width: 200px; display: block; margin: 0 auto;">
+            <p>Êtes-vous sûr de vouloir proposer ce covoiturage ?</p>
+           
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal "style=" margin-right: 34px";>Annuler</button>
+               <a id="confirmBtn" href="#" class="btn btn-secondary" style=" margin-left: 34px">Confirmer</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let confirmBtn = document.getElementById("confirmBtn");
+
+        document.querySelectorAll(".btn-propose").forEach(button => {
+            button.addEventListener("click", function () {
+                let id = this.getAttribute("data-id");
+                confirmBtn.href = "{{ path('app_proposition_covoiturage_new', {'id': '__ID__'}) }}".replace("__ID__", id);
+                document.body.classList.add("modal-open"); // Ajoute la classe pour l'effet de flou
+            });
+        });
+
+        // Supprime l'effet de flou lorsque la modale est fermée
+        document.getElementById("confirmationModal").addEventListener("hidden.bs.modal", function () {
+            document.body.classList.remove("modal-open");
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Propositions de Covoiturage{% endblock %}
+
+{% block body %}
+<div class="container">
+    {% if proposition_covoiturages is not empty %}
+        <div class="list-group" style="max-width: 600px; margin: 0 auto;">
+            {% for proposition_covoiturage in proposition_covoiturages %}
+                <div class="list-group-item list-group-item-action mb-2 p-3" style="font-size: 0.9rem; padding: 12px 16px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-1" style="font-size: 1rem;">Covoiturage proposé de <strong>{{ proposition_covoiturage.demande.depart }}</strong> à <strong>{{ proposition_covoiturage.demande.destination }}</strong></h5>
+                        <span class="text-success" style="font-size: 0.8rem;">{{ proposition_covoiturage.statut.value ?? proposition_covoiturage.statut }}</span>
+                    </div>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Nom Passager :</strong> passager 1 </p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Num conducteur :</strong> 25883328 </p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Places disponibles :</strong> {{ proposition_covoiturage.placesDispo }}</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Date de départ :</strong> {{ proposition_covoiturage.demande.date ? proposition_covoiturage.demande.date|date('Y-m-d H:i') : 'Non spécifiée' }}</p>
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ path('app_proposition_covoiturage_edit', {'id': proposition_covoiturage.id}) }}" class="btn btn-edit">Éditer</a>
+                        {{ include('proposition_covoiturage/_delete_form.html.twig', { 'id': proposition_covoiturage.id }) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">Aucune proposition de covoiturage disponible pour le moment.</p>
+    {% endif %}
+</div>
+
+{% block stylesheets %}
+    <style>
+        /* Arrière-plan */
+        body {
+            background-image: url('{{ asset('img/pic5.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Styles pour les boutons */
+        .btn-edit {
+            background-color: #07005a; /* Bleu clair */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            background-color:rgb(107, 206, 255); /* Bleu plus foncé */
+        }
+
+        
+    </style>
+{% endblock %}
+{% endblock %}

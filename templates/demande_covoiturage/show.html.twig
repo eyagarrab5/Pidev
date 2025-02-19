@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DemandeCovoiturage{% endblock %}
+
+{% block body %}
+    <h1>DemandeCovoiturage</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ demande_covoiturage.id }}</td>
+            </tr>
+            <tr>
+                <th>Passager_id</th>
+                <td>{{ demande_covoiturage.passagerId }}</td>
+            </tr>
+            <tr>
+                <th>Depart</th>
+                <td>{{ demande_covoiturage.depart }}</td>
+            </tr>
+            <tr>
+                <th>Destination</th>
+                <td>{{ demande_covoiturage.destination }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ demande_covoiturage.statut.value }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_demande_covoiturage_index') }}">back to list</a>
+
+    <a href="{{ path('app_demande_covoiturage_edit', {'id': demande_covoiturage.id}) }}">edit</a>
+
+cc{% endblock %}

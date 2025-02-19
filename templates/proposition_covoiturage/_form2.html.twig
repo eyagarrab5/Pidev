@@ -1,0 +1,18 @@
+{{ form_start(form, {'attr': {'class': 'container mt-5'}}) }}
+    <div class="card shadow-lg rounded-4 p-4" style="max-width: 400px; margin: auto; background: #f9f9f9;">
+        <h6 class="text-center mb-3" style="color: #07005a; font-weight: 600;">
+            <i class="fas fa-car-side me-2"></i>Editer le nombre  de places disponibles
+        </h6>
+       
+     <div class="mb-4">
+            {{ form_widget(form.placesDispo, {'attr': {'class': 'form-control p-3 border-0 rounded-3 shadow-lg', 'style': 'box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'}}) }}
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-primary w-100 py-2 rounded-3 shadow-lg" style="background-color: #07005a; border: none; font-weight: bold;">
+                <i class="fas fa-save me-2"></i>{{ button_label|default('Envoyer') }}
+            </button>
+        </div>
+    </div>
+    
+{{ form_end(form) }}

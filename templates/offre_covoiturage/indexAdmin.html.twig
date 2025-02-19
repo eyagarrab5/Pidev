@@ -1,0 +1,88 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% extends 'base2.html.twig' %}
+
+{% block title %}Offres de Covoiturage{% endblock %}
+
+{% block body %}
+            <h1 style="color: #0044cc; text-align: center;">Liste de toutes les offres disponibles !</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Id Conducteur </th>
+                <th>Départ</th>
+                <th>Destination</th>
+                <th>Date</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for offre_covoiturage in offre_covoiturages %}
+                <tr>
+                    <td>{{ offre_covoiturage.id }}</td>
+                    <td>{{ offre_covoiturage.conducteurid}}</td>
+                    <td>{{ offre_covoiturage.depart }}</td>
+                    <td>{{ offre_covoiturage.destination }}</td>
+                    <td>{{ offre_covoiturage.date ? offre_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}</td>
+                    <td>{{ offre_covoiturage.prix }} dt</td>
+                    <td>{{ offre_covoiturage.Statut.value }}</td>
+
+                     <td>
+                                {{ include('offre_covoiturage/_delete_form_Admin.html.twig') }}
+                        </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucune demande trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+
+

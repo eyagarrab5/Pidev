@@ -8,6 +8,16 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        types:
+            StatutOffre: App\Doctrine\Types\StatutOffreType
+            StatutReservation: App\Doctrine\Types\StatutReservationType
+            StatutDemande: App\Doctrine\Types\StatutDemandeType
+            statutProposition: App\Doctrine\Types\StatutPropositionType
+
+
+
+
+
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -22,6 +32,7 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+
 
 when@test:
     doctrine:

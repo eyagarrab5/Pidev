@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des propositions reçues{% endblock %}
+
+{% block body %}
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px;">
+   <!-- Partie gauche : div de texte -->
+   <div style="flex: 0.7; padding: 10px 10px; background-color: #f8f8f8; border-radius: 10px; border: 2px solid #e0e0e0; margin-top: -82px; width: 80%; margin-left: auto; margin-right: auto;">
+    <h2 style="color: #fec05b; text-align: center; font-size: 1.5rem;">Bienvenue Passager!</h2>
+    <p style="text-align: justify; font-size: 14px;">Ici, vous trouverez toutes les informations concernant vos demandes et les propositions des conducteurs. Le processus est simple :</p>
+
+    <ul style="list-style-type: none; padding-left: 0; font-size: 14px;">
+        <li style="margin-bottom: 8px; font-weight: bold; color: #0066cc;">1. Statut initial de la demande : 
+            <span style="color: #07005a; font-weight: bold;">en attente de proposition</span>.</li>
+        <li style="margin-bottom: 8px;">Si au moins une proposition est reçue, le statut passe à 
+            <span style="color: #07005a; font-weight: bold;">en attente de votre sélection</span>.</li>
+        <li style="margin-bottom: 8px; font-weight: bold; color: #0066cc;">2. Sélection du conducteur : 
+            Vous devez choisir parmi les conducteurs qui ont proposé un covoiturage.</li>
+        <li style="margin-bottom: 8px;">Une fois votre choix fait, le statut de la demande devient 
+            <span style="color: #07005a; font-weight: bold;">en attente de confirmation du conducteur</span>.</li>
+        <li style="margin-bottom: 8px;">Si le conducteur confirme, le statut devient 
+            <span style="color: #0066cc; font-weight: bold;">confirmé</span>.</li>
+        <li style="margin-bottom: 8px;">Si le conducteur refuse, le statut revient à 
+            <span style="color: #07005a; font-weight: bold;">en attente de sélection d'un autre conducteur</span>, et le processus recommence.</li>
+    </ul>
+
+    <p style="text-align: center; font-size: 16px; font-weight: bold; color: #fec05b;">Bonne chance et bon choix !</p>
+</div>
+
+    <!-- Partie droite : Image et liste -->
+    <div style="flex: 1; margin-right: 20px;">
+        <img src="{{ asset('img/pic4.png') }}" 
+             alt="Image de confirmation" 
+             class="img-fluid mb-0" 
+             style="border-radius: 8px; width: 220px; display: block; margin: 0 auto; margin-top: -92px">
+
+        <div class="accordeon-container" style="margin-top: 0; padding-top: 0;">
+            {% for demande_covoiturage in demande_covoiturages %}
+                <div class="accordeon-item">
+                   <div class="accordeon-header" onclick="toggleAccordion(this)" style="display: flex; align-items: center;">
+    <p style="font-size: 25px;color:#07005a; margin-right: 20px; flex-grow: 1;">{{ demande_covoiturage.depart }} → {{ demande_covoiturage.destination }}</p>
+    <div style="border-left: 2px solid #07005a; height: 30px; margin-right: 20px;"></div> <!-- Ligne verticale -->
+    <p style="color:#07005a; margin-right: 20px; flex-grow: 0;"><strong>Statut :</strong> {{ demande_covoiturage.statut.value }}</p>
+    <span class="toggle-icon">+</span>
+</div>
+
+                    <div class="accordeon-content">
+                        <p style="color:#07005a; margin-right: 20px; flex-grow: 0;"><strong>Date :</strong> {{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i') : 'Non spécifiée' }}</p>
+                        <p style="font-size: 25px;color:#07005a; margin-right: 20px; flex-grow: 1;"><strong>Budget :</strong>{{ demande_covoiturage.budget }}dt</p>
+
+                        <a href="{{ path('conducteursProposent', {'id': demande_covoiturage.id}) }}" class="btn-details"  style="margin-left:300px ">Voir les propositions</a>
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucune proposition reçue.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+ 
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Ajoutez l'image de fond directement ici */
+        body {
+             background-image: url('{{ asset('img/pic5.jpg') }}'); /* Définir le GIF comme arrière-plan */
+            background-size: cover; /* Couvrir toute la zone */
+            background-position: center; /* Centrer l'image */
+            background-repeat: no-repeat; /* Ne pas répéter l'image */
+        }
+
+        h1 {
+            text-align: center;
+            color: #555;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .accordeon-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 0;
+        }
+
+        .accordeon-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .accordeon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            cursor: pointer;
+            background-color: #667cb4;
+            color: #333;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .accordeon-header:hover {
+            background-color:#a8c9ff;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            color: #666;
+            transition: transform 0.3s;
+        }
+
+        .accordeon-content {
+            display: none;
+            padding: 15px;
+            background-color: #fff;
+            border-top: 1px solid rgb(126, 148, 157);
+            color: #555;
+        }
+
+        .btn-details {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #f5e089;
+            color: #07005a;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-details:hover {
+            background-color: #07005a;
+        }
+
+        /* Effet ouvert */
+        .accordeon-item.open .accordeon-content {
+            display: block;
+        }
+
+        .accordeon-item.open .toggle-icon {
+            transform: rotate(45deg);
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function toggleAccordion(element) {
+            const parent = element.parentElement;
+            parent.classList.toggle("open");
+        }
+    </script>
+{% endblock %}
