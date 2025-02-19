@@ -38,7 +38,15 @@
         <div class="accordeon-container" style="margin-top: 0; padding-top: 0;">
             {% for demande_covoiturage in demande_covoiturages %}
                 <div class="accordeon-item">
-                   <div class="accordeon-header" onclick="toggleAccordion(this)" style="display: flex; align-items: center;">
+                   <div class="accordeon-header" onclick="toggleAccordion(this)" style="display: flex
+;
+    align-items: center;
+    padding-left: 30px;
+    padding-top: 8px;
+    padding-bottom: 0px;
+    border: 4px solid;
+
+">
     <p style="font-size: 25px;color:#07005a; margin-right: 20px; flex-grow: 1;">{{ demande_covoiturage.depart }} → {{ demande_covoiturage.destination }}</p>
     <div style="border-left: 2px solid #07005a; height: 30px; margin-right: 20px;"></div> <!-- Ligne verticale -->
     <p style="color:#07005a; margin-right: 20px; flex-grow: 0;"><strong>Statut :</strong> {{ demande_covoiturage.statut.value }}</p>
@@ -102,8 +110,8 @@
             align-items: center;
             padding: 15px;
             cursor: pointer;
-            background-color: #667cb4;
-            color: #333;
+             background-color: #ffffff;
+            color: #a6c9ff;
             font-size: 1.1rem;
             transition: background 0.3s;
         }
