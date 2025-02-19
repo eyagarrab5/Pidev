@@ -22,13 +22,13 @@
 
         .container-wrapper {
             display: flex;
-            max-width: 700px;
-            width: 100%;
+            width: 120%;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            background: #fff;
-            margin-top: -255px;
+            background: #cbe0ff;
+            margin-top: -270px;
+            margin-right: 244px;
         }
 
         .image-container {
@@ -39,7 +39,7 @@
 
         .form-container {
             flex: 1;
-            padding: 40px;
+            padding: 12px;
             animation: slideIn 1s ease-in-out;
         }
 
@@ -50,7 +50,7 @@
         }
 
         .form-group {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
 
         .form-label {
@@ -123,7 +123,8 @@
     <div class="image-container"></div>
 
     <div class="form-container">
-        <h2>Nouvelle Demande de Covoiturage</h2>
+                <h3 style="text-align: center;font-family: 'Poppins', sans-serif;">Ajouter une nouvelle Demande</h3>
+
         {{ form_start(form) }}
 
         <div class="form-group">

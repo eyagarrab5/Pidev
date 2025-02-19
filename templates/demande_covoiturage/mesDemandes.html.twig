@@ -5,11 +5,9 @@
 {% block body %}
     <div class="container mt-4">
    
-<h5 style="text-align: center;  font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase; margin-bottom: 20px;">Voici vos demandes : vous pouvez les supprimer ou les modifier si vous le souhaitez.</h5>
-        
+
+        <h3 style="text-align: center;margin-bottom:20px;font-family: 'Poppins', sans-serif;">Voici vos demandes : vous pouvez les supprimer ou les modifier si vous le souhaitez.</h3>
+
         <div class="row">
             {% for demande_covoiturage in demande_covoiturages %}
                 <div class="col-md-4 mb-4">
