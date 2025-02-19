@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vehicule index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center my-4">Nos Véhicules</h1>
+        <div class="row">
+            {% for vehicule in vehicules %}
+                <div class="col-md-4">
+                    <div class="card mb-4 border-white">
+                        {% if vehicule.image %}
+                            <img src="{{ asset('uploads/vehicules/' ~ vehicule.image) }}" class="card-img-top" alt="Image du véhicule">
+                        {% else %}
+                            <img src="{{ asset('assets/uploads/vehicules/' ~ vehicule.image) }}" class="card-img-top" alt="Bakomotors">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ vehicule.typeVehicule }} - {{ vehicule.modele }}</h5>
+                            <p class="card-text"><strong>Rôle :</strong> {{ vehicule.role }}</p>
+                            <p class="card-text"><strong>Prix par heure :</strong> {{ vehicule.prixParHeure }} €</p>
+                            <p class="card-text"><strong>Prix par jour :</strong> {{ vehicule.prixParJour }} €</p>
+                            <p class="card-text"><strong>Disponibilité :</strong> {{ vehicule.disponibilite }}</p>
+                            <p class="card-text"><strong>Lieu de retrait :</strong> {{ vehicule.lieuRetrait }}</p>
+                            <div class="actions">
+
+                            <!-- Example for vehicle reservation button -->
+                            <a href="{{ path('app_res_new', { 'vehiculeId': vehicule.id }) }}" class="btn btn-primary">Reserver Vehicule</a>
+
+                                 </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center">Aucun véhicule trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet%}
+body {
+        background-image: url('{{ asset('img/img2.png') }}'); /* Définir le GIF comme arrière-plan */
+        background-size: cover; /* Couvrir toute la zone */
+        background-position: center; /* Centrer l'image */
+        background-repeat: no-repeat; /* Ne pas répéter l'image */
+    }
+{% endblock %}
+

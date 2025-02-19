@@ -1,0 +1,23 @@
+{# templates/vehicule/edit.html.twig #}
+{% extends 'base2.html.twig' %}
+
+{% block title %}Modifier le véhicule{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="my-4">Modifier le véhicule</h1>
+
+        {# Afficher les messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Formulaire de modification #}
+        {{ include('vehicule/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+        {# Bouton pour retourner à la liste #}
+
+    </div>
+{% endblock %}

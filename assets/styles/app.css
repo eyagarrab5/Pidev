@@ -1,3 +1,60 @@
 body {
-    background-color: skyblue;
+    background-image: url('/assets/img/img2.png'); /* Vérifie le bon chemin */
+    background-size: cover; /* Ajuste l'image pour couvrir tout l'écran */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Empêche la répétition */
+    background-attachment: fixed; /* Garde l'image fixe lors du défilement */
+    font-family: Arial, sans-serif; /* Police générale */
+    margin: 0;
+    padding: 0;
+}
+
+.vehicule-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Centrer les cartes */
+    padding: 20px;
+}
+
+.vehicule-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.8); /* Fond blanc avec transparence */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.vehicule-card h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.actions {
+    margin-top: 16px;
+}
+
+.actions .btn {
+    margin-right: 8px;
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.actions .btn:hover {
+    background-color: #0056b3;
+}
+
+.border-white {
+    border: 4px solid white; /* Bordure plus épaisse */
+    border-radius: 12px; /* Coins plus arrondis */
+    padding: 20px; /* Plus d'espace à l'intérieur */
+    background-color: rgba(255, 255, 255, 0.1); /* Fond légèrement transparent */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre pour un effet en relief */
 }

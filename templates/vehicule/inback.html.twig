@@ -1,0 +1,74 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Gestion des Véhicules{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<div class="container mt-4">
+    <h1 class="text-center text-primary mb-4">Gestion des Véhicules</h1>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ path('app_vehicule_new') }}" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Ajouter un véhicule
+        </a>
+    </div>
+
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Type de Véhicule</th>
+                <th>Modèle</th>
+                <th>Rôle</th>
+                <th>Prix / Heure</th>
+                <th>Prix / Jour</th>
+                <th>Disponibilité</th>
+                <th>Lieu de Retrait</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vehicule in vehicules %}
+            <tr>
+                <td>{{ vehicule.typeVehicule }}</td>
+                <td>{{ vehicule.modele }}</td>
+                <td>{{ vehicule.role }}</td>
+                <td>{{ vehicule.prixParHeure }}€</td>
+                <td>{{ vehicule.prixParJour }}€</td>
+                <td>
+                    {% if vehicule.disponibilite %}
+                        <span class="badge badge-success">Disponible</span>
+                    {% else %}
+                        <span class="badge badge-danger">Indisponible</span>
+                    {% endif %}
+                </td>
+                <td>{{ vehicule.lieuRetrait }}</td>
+                <td>
+                    <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form method="post" action="{{ path('app_vehicule_delete', {'id': vehicule.id}) }}" class="d-inline" onsubmit="return confirmDelete();">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vehicule.id) }}">
+                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8" class="text-center text-muted">Aucun véhicule trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Êtes-vous sûr de vouloir supprimer ce véhicule ?");
+    }
+</script>
+{% endblock %}
