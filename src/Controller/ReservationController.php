@@ -127,7 +127,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, $id
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('mesReservations', ['id' => 456], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('reservation/edit.html.twig', [

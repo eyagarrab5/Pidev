@@ -14,9 +14,16 @@ class ReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('passager_id')
-                
-        ;        
+            
+        ->add('statut', ChoiceType::class, [
+            'choices' => array_combine(
+                array_map(fn($statut) => $statut->name, StatutReservation::cases()), // Labels
+                StatutReservation::cases() // Valeurs
+            ),
+            'choice_label' => fn($choice) => $choice->name, // Affiche le nom de l'énumération
+            'expanded' => false, // True pour afficher des boutons radio
+            'multiple' => false, // True pour une sélection multiple
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
