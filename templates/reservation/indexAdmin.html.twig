@@ -1,47 +1,50 @@
 {% extends 'base2.html.twig' %}
 
-{% block title %}Reservation index{% endblock %}
+{% block title %}Liste de toutes les réservations{% endblock %}
 
 {% block body %}
-    <h1 style="color: #0044cc; text-align: center;">Liste de toutes les réservations disponibles !</h1>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Liste de toutes les réservations</h1>
+        
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark bg-primary text-white">
+                 <tr>
                 <th>Id</th>
                 <th>Id Passager</th>
                 <th>Statut</th>
                 <th>Id Offre</th>
                 <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for reservation in reservations %}
-            <tr>
-                <td>{{ reservation.id }}</td>
+                    <tr>
+                         <td>{{ reservation.id }}</td>
                 <td>{{ reservation.passagerId }}</td>
                 <td>{{ reservation.statut.value }}</td>
                 <td>{{ reservation.offre.id }}</td>
-                <td>
-                <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" 
-   style="display: inline-block;
-    padding: 4px 20px;
-    background-color: #0044cc;
-    color: white;
-    text-decoration: none;
-    margin-bottom: 5px;
-    border-radius: 3px;">
-   Éditer
-</a>
+                <td class="d-flex">
                     {{ include('reservation/_delete_form_Admin.html.twig') }}
+                                        
                 </td>
-            </tr>
-            {% else %}
-                <tr>
-                    <td colspan="5" class="text-center">Aucune réservation trouvée.</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Aucune réservation trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+

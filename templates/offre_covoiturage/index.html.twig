@@ -4,7 +4,14 @@
 
 {% block body %}
     <div class="container" style="margin-top: -4.5rem !important;">
-      
+          <div class="search-container" style="text-align: center; margin-bottom: 20px;">
+        <div class="input-group" style="max-width: 300px; margin: 0 auto;">
+            <span class="input-group-text" style="background-color: #fff; border-right: 0;">
+                <i class="fas fa-search" style="color: #007bff;"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Rechercher des demandes..." aria-label="Rechercher" style="border-left: 0;">
+        </div>
+    </div>
          <!-- Ajouter le GIF en haut de la page -->
         <div class="gif-container" style="margin-bottom: 39px;">
                 <h2 style="text-align: center;font-family: 'Poppins', sans-serif;">Trouvez votre trajet idéal parmi les offres disponibles !</h2>
@@ -31,6 +38,9 @@
                             <div class="d-flex justify-content-between">
                                 <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ offre_covoiturage.id }}">
                                     Réserver
+                                </button>
+                                  <button class="btn-favorite">
+                                  <i class="fas fa-heart"></i>
                                 </button>
                             </div>
                         </div>
@@ -134,6 +144,34 @@
     .modal-backdrop.show {
         backdrop-filter: blur(8px);
     }
+    
+.btn-favorite {
+    background-color: transparent; /* Fond transparent */
+    border: none; /* Pas de bordure pour le bouton */
+    color: #dc3545; /* Couleur de la bordure du cœur */
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 6px; /* Espace interne */
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.btn-favorite i {
+    font-size: 1.5rem;
+    color: transparent; /* Cœur transparent */
+    -webkit-text-stroke: 1px #dc3545; /* Bordure rouge */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-favorite:hover i {
+    color: rgba(255, 77, 77, 0.3); /* Remplissage léger au survol */
+    -webkit-text-stroke: 1px #fa4455; /* Bordure plus vive */
+    transform: scale(1.1); /* Légère mise en avant */
+}
+
+.btn-favorite:focus {
+    outline: none;
+}
+
 </style>
 
 <!-- Bootstrap JS (si pas déjà inclus dans base.html.twig) -->
