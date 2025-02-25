@@ -17,12 +17,12 @@ class ReservationType extends AbstractType
             
         ->add('statut', ChoiceType::class, [
             'choices' => array_combine(
-                array_map(fn($statut) => $statut->name, StatutReservation::cases()), // Labels
-                StatutReservation::cases() // Valeurs
+                array_map(fn($statut) => $statut->name, StatutReservation::cases()),
+                StatutReservation::cases() 
             ),
-            'choice_label' => fn($choice) => $choice->name, // Affiche le nom de l'énumération
-            'expanded' => false, // True pour afficher des boutons radio
-            'multiple' => false, // True pour une sélection multiple
+            'choice_label' => fn($choice) => $choice->name, 
+            'expanded' => false, 
+            'multiple' => false, 
         ]);
     }
 

@@ -15,23 +15,23 @@ class OffreCovoiturageType extends AbstractType
     {
         $builder
             ->add('depart',null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             ->add('destination',null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             ->add('matVehicule',null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             ->add('placesDispo',null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             
             ->add('date', DateTimeType::class, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             ->add('prix',null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
 
         ;

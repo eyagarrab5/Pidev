@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 use App\Enum\StatutDemande;
-
 use App\Entity\DemandeCovoiturage;
 use App\Form\DemandeCovoiturageType;
 use App\Repository\DemandeCovoiturageRepository;
@@ -48,20 +47,16 @@ public function indexAdmin(DemandeCovoiturageRepository $demandeCovoiturageRepos
         $demandeCovoiturage->setStatut(StatutDemande::EN_ATTENTE);
         $form = $this->createForm(DemandeCovoiturageType::class, $demandeCovoiturage);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($demandeCovoiturage);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_demande_covoiturage_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->render('demande_covoiturage/new.html.twig', [
             'demande_covoiturage' => $demandeCovoiturage,
             'form' => $form,
         ]);
     }
-
     #[Route('/{id}', name: 'app_demande_covoiturage_show', methods: ['GET'])]
     public function show(DemandeCovoiturage $demandeCovoiturage): Response
     {

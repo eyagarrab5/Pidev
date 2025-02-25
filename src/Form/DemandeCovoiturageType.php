@@ -12,18 +12,19 @@ class DemandeCovoiturageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('depart', null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             ->add('destination', null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false, 
             ])
             ->add('date', DateTimeType::class, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false,  
             ])
             ->add('budget', null, [
-                'required' => false,  // Champ non obligatoire
+                'required' => false, 
             ])
         ;
     }
