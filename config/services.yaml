@@ -6,6 +6,9 @@
 parameters:
         uploads_directory: '%kernel.project_dir%/public/uploads'
 services:
+    App\Service\BadWordsFilter:
+        arguments:
+            $badWords: '%kernel.project_dir%/config/bad_words.txt'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
