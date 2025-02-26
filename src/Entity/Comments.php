@@ -37,7 +37,7 @@ class Comments
     )]
     private ?string $tags = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $attachments = null;
 
     #[ORM\ManyToOne(targetEntity: ForumPosts::class, inversedBy: 'comments')]
@@ -130,7 +130,7 @@ class Comments
         return $this->attachments;
     }
 
-    public function setAttachments(string $attachments): static
+    public function setAttachments(?string $attachments): static
     {
         $this->attachments = $attachments;
 

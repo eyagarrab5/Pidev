@@ -66,14 +66,6 @@ class ForumPosts
     private ?User $user = null;
 
 
-    
-   /* #[ORM\Column(length: 255, nullable: true)]
-    private ?string $userFirstName = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $userLastName = null;
-*/
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Comments;
 use App\Entity\ForumPosts; 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -19,14 +20,8 @@ class CommentsType extends AbstractType
             'label' => 'Contenu du commentaire',
             'attr' => ['rows' => 5],
         ]) // Ajout d'un type texte pour 'content'
-        ->add('tags')
-        ->add('attachments')
-        ->add('forumPost', EntityType::class, [
-            'class' => ForumPosts::class,   // La classe de l'entité ForumPost
-            'choice_label' => 'title',     // Le champ du forum post à afficher dans la liste
-            'placeholder' => 'Choisir un post', // Optionnel: pour afficher un texte de placeholder
-            'label' => 'Post de Forum'    // Libellé du champ
-        ]);
+        
+        ;
 }
 
     public function configureOptions(OptionsResolver $resolver): void

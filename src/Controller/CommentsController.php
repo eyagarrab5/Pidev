@@ -29,11 +29,10 @@ final class CommentsController extends AbstractController{
     #[Route('/new/{postId}', name: 'app_comments_new', methods: ['GET', 'POST'])]
     public function new(int $postId, Request $request, EntityManagerInterface $entityManager, ForumPostsRepository $forumPostsRepository): Response
     {
-    // Récupérer le post associé au commentaire
     $forumPost = $forumPostsRepository->find($postId);
 
     if (!$forumPost) {
-        throw $this->createNotFoundException('Post not found');
+        throw $this->createNotFoundException('Post non trouvé');
     }
 
     // Créer un nouveau commentaire
@@ -53,6 +52,22 @@ final class CommentsController extends AbstractController{
         // Définir les dates de création et de mise à jour
         $comment->setCreatedAt(new \DateTime());
         $comment->setUpdatedAt(new \DateTime());
+
+
+            // Gérer l'upload de la pièce jointe
+            $file = $request->files->get('attachments');
+            if ($file) {
+                // Traitement de l'upload : génération d'un nom unique et déplacement du fichier
+                $newFilename = uniqid().'.'.$file->guessExtension();
+                // Assurez-vous que le paramètre "uploads_directory" est défini dans config/services.yaml ou .env
+                $uploadDir = $this->getParameter('uploads_directory');
+                $file->move($uploadDir, $newFilename);
+                // Enregistrer le nom du fichier dans l'entité
+                $comment->setAttachments($newFilename);
+            } else {
+                // Si aucun fichier n'est uploadé, on définit la valeur sur null
+                $comment->setAttachments(null);
+            }
 
         // Enregistrer le commentaire
         $entityManager->persist($comment);

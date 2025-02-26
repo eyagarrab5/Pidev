@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\BadWordsFilter;
 use App\Entity\ForumPosts;
 use App\Entity\User; 
 use App\Form\ForumPostsType;
@@ -13,9 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface; 
 
 #[Route('/forum/posts')]
 final class ForumPostsController extends AbstractController{
+    private BadWordsFilter $badWordsFilter;
     #[Route(name: 'app_forum_posts_index', methods: ['GET'])]
     public function index(Request $request, ForumPostsRepository $forumPostsRepository, PaginatorInterface $paginator): Response
     {
@@ -48,7 +51,7 @@ final class ForumPostsController extends AbstractController{
 
          $forumPostsRepository->findBySearchAndSort($search, $sort), 
         $request->query->getInt('page', 1), // Numéro de page
-        10 // Nombre d'éléments par page
+        5 // Nombre d'éléments par page
     );
     /*$forumPosts = $queryBuilder->getQuery()->getResult();
         // Appeler la méthode du repository pour filtrer et trier les posts
@@ -67,14 +70,22 @@ final class ForumPostsController extends AbstractController{
         ]);
     }
 
+    public function __construct(BadWordsFilter $badWordsFilter)
+    {
+        $this->badWordsFilter = $badWordsFilter;
+    }
+
     #[Route('/new', name: 'app_forum_posts_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $forumPost = new ForumPosts();
         $form = $this->createForm(ForumPostsType::class, $forumPost);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Filtrer les "bad words" dans le titre et le contenu
+            $forumPost->setTitle($this->badWordsFilter->filter($forumPost->getTitle()));
+            $forumPost->setContent($this->badWordsFilter->filter($forumPost->getContent()));
             $user = $entityManager->getRepository(User::class)->find(1);
             if (!$user) {
                 throw $this->createNotFoundException('Utilisateur non trouvé');
@@ -82,23 +93,19 @@ final class ForumPostsController extends AbstractController{
             $forumPost->setCreatedAt(new \DateTime()); 
             $forumPost->setUpdatedAt(new \DateTime());
             $attachment = $form->get('attachment')->getData();
-            if ($attachment instanceof UploadedFile) {
-                $newFilename = uniqid().'.'.$attachment->guessExtension();
+            if ($attachment) {
+                $originalFilename = pathinfo($attachment->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$attachment->guessExtension();
 
-                try {
+
+                
                     // Déplace le fichier dans le répertoire où vous souhaitez le stocker
                     $attachment->move(
                         $this->getParameter('uploads_directory'), // configurez ce paramètre dans `services.yaml`
                         $newFilename
                     );
-                    dump('Fichier déplacé avec succès');
-                } catch (\Exception $e) {
-                    dump('Erreur lors du déplacement du fichier : ' . $e->getMessage());
-                    // Gestion des erreurs
-                    $this->addFlash('error', 'File upload failed!');
-                    return $this->redirectToRoute('forum_post_new');
-                }
-
+                
                 // Enregistrez le chemin du fichier dans l'entité
                 $forumPost->setAttachment($newFilename);
             }
@@ -112,6 +119,7 @@ final class ForumPostsController extends AbstractController{
             $forumPost->updateCommentsCount();
             $entityManager->flush();
 
+            $this->addFlash('success', 'Le post a été créé avec succès.');
             return $this->redirectToRoute('app_forum_posts_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -140,6 +148,9 @@ final class ForumPostsController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Filtrer les "bad words" dans le titre et le contenu
+            $forumPost->setTitle($this->badWordsFilter->filter($forumPost->getTitle()));
+            $forumPost->setContent($this->badWordsFilter->filter($forumPost->getContent()));
             $forumPost->setUpdatedAt(new \DateTime());
             $entityManager->flush();
             
@@ -185,6 +196,8 @@ final class ForumPostsController extends AbstractController{
             'forum_posts' => $forumPosts,
         ]);
     }
+
+    
         
 
 }

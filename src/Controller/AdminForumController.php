@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ForumPosts;
 use App\Entity\Comments;
+use App\Repository\UserRepository;
 use App\Repository\ForumPostsRepository;
 use App\Form\CommentsType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,35 +62,39 @@ class AdminForumController extends AbstractController
     }
 
     #[Route('/posts/{id}/comment', name: 'app_admin_forum_post_comment', methods: ['GET', 'POST'])]
-    public function commentPost(Request $request, ForumPosts $forumPost, EntityManagerInterface $entityManager): Response
+    public function commentPost(Request $request, ForumPosts $forumPost, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
-        // Créer une nouvelle instance de l'entité Comments
         $comment = new Comments();
-    
-        // Créer le formulaire pour ajouter un commentaire
         $form = $this->createForm(CommentsType::class, $comment);
         $form->handleRequest($request);
-    
-        // Vérifier si le formulaire est soumis et valide
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Associer le commentaire au post de forum
+            // Récupérer l'utilisateur "Administration"
+            $adminUser = $userRepository->findOneBy(['first_name' => 'Administration']);
+
+            if (!$adminUser) {
+                throw $this->createNotFoundException('Utilisateur "Administration" non trouvé.');
+            }
+
+            // Associer le commentaire au post et à l'utilisateur "Administration"
             $comment->setForumPost($forumPost);
-    
-            // Définir la date de création du commentaire
+            $comment->setUser($adminUser); // Associer l'utilisateur "Administration"
             $comment->setCreatedAt(new \DateTime());
-    
-            // Enregistrer le commentaire en base de données
+            $comment->setUpdatedAt(new \DateTime());
+
+                
+            // Initialiser attachments si nécessaire
+            if ($comment->getAttachments() === null) {
+            $comment->setAttachments(''); // Ou une valeur par défaut
+             }
+
             $entityManager->persist($comment);
             $entityManager->flush();
-    
-            // Ajouter un message flash pour indiquer que le commentaire a été ajouté avec succès
+
             $this->addFlash('success', 'Le commentaire a été ajouté avec succès.');
-    
-            // Rediriger vers la liste des posts de forum
             return $this->redirectToRoute('app_admin_forum_posts');
         }
-    
-        // Afficher le formulaire dans le template Twig
+
         return $this->render('admin/comment_form.html.twig', [
             'form' => $form->createView(),
             'forum_post' => $forumPost,
