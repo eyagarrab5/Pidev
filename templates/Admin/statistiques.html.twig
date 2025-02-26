@@ -1,163 +1,168 @@
 {% extends 'base2.html.twig' %}
 
+{% block title %}Statistiques - Administration{% endblock %}
+
 {% block body %}
-    <head>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-            body {
-                font-family: 'Arial', sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f0f4f8;
-            }
-            .stat-page {
-                display: flex;
-                justify-content: space-between;
-                padding: 30px;
-                gap: 20px;
-                flex-wrap: wrap;
-            }
+    <h1>Statistiques</h1>
 
-            .left-panel, .right-panel {
-                width: 48%;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .top-left, .top-right, .bottom-left, .bottom-right {
-                height: 280px;
-                margin-bottom: 20px;
-                border-radius: 15px;
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-                background-color: #fff;
-                padding: 20px;
-            }
-
-            canvas {
-                border-radius: 15px;
-                max-height: 100%;
-            }
-
-            .chart-title {
-                text-align: center;
-                font-size: 1.2rem;
-                margin-bottom: 15px;
-                font-weight: bold;
-            }
-
-            .legend {
-                display: flex;
-                justify-content: space-between;
-                padding-top: 10px;
-            }
-        </style>
-    </head>
-    <div class="stat-page">
-        <div class="left-panel">
-            <div class="top-left">
-                <div class="chart-title">Propositions de Covoiturage</div>
-                <canvas id="propChart"></canvas>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Propositions de covoiturage</h3>
+                <canvas id="chartProps"></canvas>
             </div>
-            <div class="bottom-left">
-                <div class="chart-title">Demandes de Covoiturage</div>
-                <canvas id="demandChart"></canvas>
+            <div class="col-md-6">
+                <h3>Réservations</h3>
+                <canvas id="chartResv"></canvas>
             </div>
         </div>
-        <div class="right-panel">
-            <div class="top-right">
-                <div class="chart-title">Réservations</div>
-                <canvas id="resvChart"></canvas>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Demandes de covoiturage</h3>
+                <canvas id="chartDemands"></canvas>
             </div>
-            <div class="bottom-right">
-                <div class="chart-title">Offres de Covoiturage</div>
-                <canvas id="offerChart"></canvas>
+            <div class="col-md-6">
+                <h3>Offres de covoiturage</h3>
+                <canvas id="chartOffers"></canvas>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const propChart = document.getElementById('propChart').getContext('2d');
-        const demandChart = document.getElementById('demandChart').getContext('2d');
-        const resvChart = document.getElementById('resvChart').getContext('2d');
-        const offerChart = document.getElementById('offerChart').getContext('2d');
-
-        // Les données sont passées depuis le contrôleur
-        const dataLabels = ['01-02', '02-02', '03-02', '04-02', '05-02'];
-        const dataProps = {{ dataProps | json_encode }};  
-        const dataResv = {{ dataResv | json_encode }};
-        const dataDemands = {{ dataDemands | json_encode }};
-        const dataOffers = {{ dataOffers | json_encode }};
-
-        const createChart = (ctx, labels, data, label, color) => {
-            return new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: label,
-                        data: data,
-                        borderColor: color,
-                        backgroundColor: color + '80', // Transparent fill
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: color,
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
-                        borderWidth: 3,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return `Valeur: ${tooltipItem.raw}`; // Afficher la valeur du point
-                                }
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        },
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#e0e0e0'
-                            },
-                            ticks: {
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#e0e0e0'
-                            },
-                            ticks: {
-                                font: {
-                                    size: 12
-                                }
-                            }
+        // Données pour chaque graphique
+        const dataProps = {{ dataProps|json_encode()|raw }};
+        const dataResv = {{ dataResv|json_encode()|raw }};
+        const dataDemands = {{ dataDemands|json_encode()|raw }};
+        const dataOffers = {{ dataOffers|json_encode()|raw }};
+        const labels = {{ dataLabels|json_encode()|raw }};
+        
+        // Graphique pour les propositions de covoiturage
+        new Chart(document.getElementById('chartProps'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Propositions de covoiturage',
+                    data: dataProps,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
                         }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
                     }
                 }
-            });
-        };
+            }
+        });
 
-        // Créer les graphiques
-        createChart(propChart, dataLabels, dataProps, 'Propositions', '#3498db');
-        createChart(resvChart, dataLabels, dataResv, 'Réservations', '#2ecc71');
-        createChart(demandChart, dataLabels, dataDemands, 'Demandes', '#e74c3c');
-        createChart(offerChart, dataLabels, dataOffers, 'Offres', '#f39c12');
+        // Graphique pour les réservations
+        new Chart(document.getElementById('chartResv'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Réservations',
+                    data: dataResv,
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Graphique pour les demandes de covoiturage
+        new Chart(document.getElementById('chartDemands'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Demandes de covoiturage',
+                    data: dataDemands,
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Graphique pour les offres de covoiturage
+        new Chart(document.getElementById('chartOffers'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Offres de covoiturage',
+                    data: dataOffers,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 {% endblock %}

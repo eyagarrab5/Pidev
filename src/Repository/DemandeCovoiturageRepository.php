@@ -39,6 +39,7 @@ class DemandeCovoiturageRepository extends ServiceEntityRepository
               ->getResult()
            ;
         }
+        
     //    public function findOneBySomeField($value): ?DemandeCovoiturage
     //    {
     //        return $this->createQueryBuilder('d')

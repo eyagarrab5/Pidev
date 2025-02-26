@@ -5,6 +5,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Enum\StatutProposition;
 use App\Repository\PropositionCovoiturageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
+
 
 #[ORM\Entity(repositoryClass: PropositionCovoiturageRepository::class)]
 class PropositionCovoiturage
@@ -27,6 +29,9 @@ class PropositionCovoiturage
     #[Assert\Positive(message: 'Le nombre de places doit être supérieur à zéro.')]
     #[Assert\LessThanOrEqual(value: 8, message: 'Le nombre de places ne peut pas dépasser 8.')]
     private ?int $placesDispo = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -39,11 +44,26 @@ class PropositionCovoiturage
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+    
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
     public function getConducteurId(): ?int
     {
         return $this->conducteur_id;
     }
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+    
     public function setConducteurId(int $conducteur_id): static
     {
         $this->conducteur_id = $conducteur_id;

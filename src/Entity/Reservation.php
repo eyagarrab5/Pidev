@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Enum\StatutReservation;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -23,7 +24,25 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?OffreCovoiturage $offre = null;
-
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+    
+    
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+    
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+    
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
     public function getId(): ?int
     {
         return $this->id;
