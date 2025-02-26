@@ -190,3 +190,79 @@ body, html {
     height: 100%;
     font-family: Arial, sans-serif;
 }
+/* Styles spécifiques pour le formulaire d'ajout de commentaire */
+.comment-form-container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-form-container h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.comment-form-container .form-label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.comment-form-container .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.comment-form-container .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.comment-form-container textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.comment-form-container .btn-primary {
+    background-color: #1877f2;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-form-container .btn-primary:hover {
+    background-color: #166fe5;
+}
+
+.comment-form-container .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-form-container .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.comment-form-container .fas {
+    margin-right: 8px;
+}
