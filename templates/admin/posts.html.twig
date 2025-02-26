@@ -3,73 +3,110 @@
 {% block title %}Admin - Posts{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="text-center my-4">Administration des Posts</h1>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Administration - Posts</h1>
 
         <!-- Tableau des posts -->
-        {% for forum_post in forum_posts %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">{{ forum_post.title }}</h5>
-                    <p class="card-text">{{ forum_post.content }}</p>
-                    <p class="text-muted small">
-                        Posté par : {{ forum_post.user.firstName }} {{ forum_post.user.lastName }}
-                        le {{ forum_post.createdAt|date('d/m/Y H:i') }}
-                        {% if forum_post.updatedAt %}
-                            | Dernière modification le {{ forum_post.updatedAt|date('d/m/Y H:i') }}
-                        {% endif %}
-                    </p>
+        <table class="table table-striped table-hover table-bordered shadow-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Titre</th>
+                    <th>Contenu</th>
+                    <th>Auteur</th>
+                    <th>Date de création</th>
+                    <th>Dernière modification</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for forum_post in forum_posts %}
+                    <tr>
+                        <td>{{ forum_post.title }}</td>
+                        <td>{{ forum_post.content }}</td>
+                        <td>{{ forum_post.user.firstName }} {{ forum_post.user.lastName }}</td>
+                        <td>{{ forum_post.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% if forum_post.updatedAt %}
+                                {{ forum_post.updatedAt|date('d/m/Y H:i') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- Bouton Supprimer le post -->
+                            <form action="{{ path('app_admin_forum_post_delete', {'id': forum_post.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');" class="d-inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum_post.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> 
+                                </button>
+                            </form>
 
-                    <!-- Boutons pour le post -->
-                    <div class="d-flex justify-content-start gap-2 mb-3">
-                        <!-- Bouton Supprimer le post -->
-                        <form action="{{ path('app_admin_forum_post_delete', {'id': forum_post.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum_post.id) }}">
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i> Supprimer le post
-                            </button>
-                        </form>
+                            <!-- Bouton Commenter -->
+                            <a href="{{ path('app_admin_forum_post_comment', {'id': forum_post.id}) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-comment"></i> 
+                            </a>
+                        </td>
+                    </tr>
 
-                        <!-- Bouton Commenter -->
-                        <a href="{{ path('app_admin_forum_post_comment', {'id': forum_post.id}) }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-comment"></i> Commenter
-                        </a>
-                    </div>
-
-                    <!-- Liste des commentaires associés -->
-                    <h6>Commentaires :</h6>
-                    {% if forum_post.comments|length > 0 %}
-                        <ul class="list-group list-group-flush">
-                            {% for comment in forum_post.comments %}
-                                <li class="list-group-item">
-                                    <p>{{ comment.content }}</p>
-                                    <small class="text-muted">
-                                        Posté par : {{ comment.user.firstName }} {{ comment.user.lastName }}
-                                        le {{ comment.createdAt|date('d/m/Y H:i') }}
-                                        {% if comment.updatedAt %}
-                                            | Modifié le {{ comment.updatedAt|date('d/m/Y H:i') }}
-                                        {% endif %}
-                                    </small>
-
-                                    <!-- Bouton Supprimer le commentaire -->
-                                    <form action="{{ path('app_admin_forum_comment_delete', {'id': comment.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                                        <button type="submit" class="btn btn-danger btn-sm mt-2">
-                                            <i class="fas fa-trash"></i> Supprimer le commentaire
-                                        </button>
-                                    </form>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted">Aucun commentaire pour ce post.</p>
-                    {% endif %}
-                </div>
-            </div>
-        {% else %}
-            <div class="alert alert-info" role="alert">
-                Aucun post trouvé.
-            </div>
-        {% endfor %}
+                    <!-- Commentaires associés au post -->
+                    <tr>
+                        <td colspan="6">
+                            <h6>Commentaires :</h6>
+                            {% if forum_post.comments|length > 0 %}
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Contenu</th>
+                                            <th>Auteur</th>
+                                            <th>Date de création</th>
+                                            <th>Dernière modification</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for comment in forum_post.comments %}
+                                            <tr>
+                                                <td>{{ comment.content }}</td>
+                                                <td>{{ comment.user.firstName }} {{ comment.user.lastName }}</td>
+                                                <td>{{ comment.createdAt|date('d/m/Y H:i') }}</td>
+                                                <td>
+                                                    {% if comment.updatedAt %}
+                                                        {{ comment.updatedAt|date('d/m/Y H:i') }}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <!-- Bouton Supprimer le commentaire -->
+                                                    <form action="{{ path('app_admin_forum_comment_delete', {'id': comment.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');" class="d-inline">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i> 
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p class="text-muted">Aucun commentaire pour ce post.</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div class="alert alert-info" role="alert">
+                                Aucun post trouvé.
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

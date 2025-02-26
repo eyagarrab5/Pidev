@@ -2,19 +2,86 @@
 
 {% block title %}Forum{% endblock %}
 
-
 {% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            padding: 15px;
+        }
+
+        .btn-outline-primary, .btn-outline-success {
+            margin-right: 10px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .btn-outline-primary:hover, .btn-outline-success:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .badge {
+            font-size: 0.9em;
+            padding: 0.5em 0.75em;
+        }
+
+        .collapse {
+            transition: height 0.3s ease;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 10px 0;
+        }
+
+        .text-muted {
+            font-size: 0.9em;
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
 
     <div class="container">
-        <h1 class="text-center my-4">Forum </h1>
+        <h1 class="text-center my-4">Forum</h1>
 
-         <!-- Formulaire de recherche et de tri -->
+        <!-- Formulaire de recherche et de tri -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <form action="{{ path('app_forum_posts_index') }}" method="get" class="d-flex">
                     <input type="text" name="search" class="form-control me-2" placeholder="Rechercher un post..." value="{{ app.request.query.get('search') }}">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> Rechercher
+                        <i class="fas fa-search"></i> 
                     </button>
                 </form>
             </div>
@@ -26,7 +93,7 @@
                         <option value="most_liked" {% if app.request.query.get('sort') == 'most_liked' %}selected{% endif %}>Plus aimés</option>
                         <option value="least_liked" {% if app.request.query.get('sort') == 'least_liked' %}selected{% endif %}>Moins aimés</option>
                     </select>
-                                    </form>
+                </form>
             </div>
         </div>
 
@@ -50,27 +117,29 @@
                             | Dernière modification le {{ forum_post.updatedAt|date('d/m/Y H:i') }}
                         {% endif %}
                     </p>
-                       {% if forum_post.attachment %} {# Utilisez "attachment" sans "s" #}
-                <p>
-                    <strong>Pièce jointe :</strong>
-                    <a href="{{ asset('uploads/' ~ forum_post.attachment) }}" target="_blank">Télécharger</a>
-                </p>
-            {% endif %}
+                    {% if forum_post.attachment %}
+                        {% if forum_post.attachment matches '/\\.(jpg|jpeg|png|gif)$/i' %}
+                            <img src="{{ asset('uploads/' ~ forum_post.attachment) }}" alt="Image jointe" class="img-fluid">
+                        {% else %}
+                            <a href="{{ asset('uploads/' ~ forum_post.attachment) }}" target="_blank">Télécharger le fichier</a>
+                        {% endif %}
+                    {% endif %}
                 </div>
+
                 <!-- Boutons Like et Commenter -->
                 <div class="card-footer bg-transparent">
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Bouton Like -->
                         <form action="{{ path('app_forum_posts_like', {'id': forum_post.id}) }}" method="POST" style="display: inline;">
                             <button type="submit" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-thumbs-up"></i> J'aime
+                                <i class="fas fa-thumbs-up"></i> J'aime
                             </button>
                         </form>
                         <span class="badge bg-secondary">{{ forum_post.likes }} Likes</span>
 
                         <!-- Bouton Commenter -->
                         <button class="btn btn-outline-success btn-sm" data-bs-toggle="collapse" data-bs-target="#comments-{{ forum_post.id }}">
-                            <i class="fas fa-comment"></i> Commenter
+                            <i class="fas fa-comment"></i> Commentaires
                         </button>
                     </div>
                 </div>
@@ -85,7 +154,8 @@
                                     <li class="list-group-item">
                                         <p>{{ comment.content }}</p>
                                         <small class="text-muted">
-                                            Posté le {{ comment.createdAt|date('d/m/Y H:i') }}
+                                            Posté par : {{ comment.user.firstName }} {{ comment.user.lastName }}
+                                            le {{ comment.createdAt|date('d/m/Y H:i') }}
                                             {% if comment.updatedAt %}
                                                 | Modifié le {{ comment.updatedAt|date('d/m/Y H:i') }}
                                             {% endif %}
@@ -97,29 +167,23 @@
                             <p class="text-muted">Aucun commentaire pour le moment.</p>
                         {% endif %}
 
-                        <!-- Formulaire pour ajouter un commentaire -->
-                        <form action="{{ path('app_comments_new', {'postId': forum_post.id}) }}" method="post" class="mt-3">
-                           <!-- <div class="form-group">
-                                <textarea name="content" class="form-control" rows="3" placeholder="Ajouter un commentaire..." required></textarea>
-                            </div>-->
-                            <button type="submit" class="btn btn-primary btn-sm mt-2">Commenter</button>
-                        </form>
+                         <!-- Bouton pour ajouter un commentaire -->
+                            <div class="mt-3">
+                                <a href="{{ path('app_comments_new', {'postId': forum_post.id}) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-comment"></i> Ajouter un commentaire
+                                </a>
+                            </div>
                     </div>
-        <div class="col-md-6">
-            <strong>Tags :</strong> {{ forum_post.tags }}
-        </div>
-    </div>
-   
-</div>
+                </div>
 
                 <!-- Actions (show, edit) -->
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <a href="{{ path('app_forum_posts_show', {'id': forum_post.id}) }}" class="btn btn-info btn-sm me-2">
-                            <i class="fas fa-eye"></i> Voir
+                            <i class="fas fa-eye"></i> 
                         </a>
                         <a href="{{ path('app_forum_posts_edit', {'id': forum_post.id}) }}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Modifier
+                            <i class="fas fa-edit"></i> 
                         </a>
                     </div>
                 </div>
@@ -129,8 +193,10 @@
                 Aucun post trouvé.
             </div>
         {% endfor %}
-            <div class="navigation">
-                {{ knp_pagination_render(forum_posts) }}
-            </div>
+
+        <!-- Pagination -->
+        <div class="navigation">
+            {{ knp_pagination_render(forum_posts) }}
+        </div>
     </div>
 {% endblock %}

@@ -3,6 +3,57 @@
 {% block title %}Détails du Post{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<style>
+.comment-actions {
+    display: flex;
+    gap: 10px; /* Espace entre les boutons */
+    align-items: center;
+}
+
+.btn-modify, .btn-delete {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.btn-modify {
+    color: #ffc107; /* Couleur jaune pour le bouton de modification */
+    background-color: transparent;
+    border: 1px solid #ffc107; /* Bordure jaune */
+    color: #ffc107; /* Couleur jaune pour le texte et l'icône */
+    padding: 5px 10px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-modify:hover {
+    color: #e0a800; /* Couleur jaune plus foncée au survol */
+    color: white;
+}
+
+.btn-delete {
+    background-color: transparent;
+    border: 1px solid #dc3545; /* Bordure rouge */
+    color: #dc3545; /* Couleur rouge pour le texte et l'icône */
+    padding: 5px 10px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px; /* Espace entre l'icône et le texte */
+}
+
+.btn-delete:hover {
+    background-color: #dc3545; /* Fond rouge au survol */
+    color: white; /* Texte et icône blancs au survol */
+}
+</style>
     <div class="container">
         <h1 class="text-center my-4">Détails du Post</h1>
 
@@ -16,6 +67,16 @@
                         | Dernière modification le {{ forum_post.updatedAt|date('d/m/Y H:i') }}
                     {% endif %}
                 </p>
+                {% if forum_post.attachment %}
+                    <p>Chemin du fichier : {{ asset('uploads/' ~ forum_post.attachment) }}</p>
+                    {% if forum_post.attachment matches '/\\.(jpg|jpeg|png|gif)$/i' %}
+                        <img src="{{ asset('uploads/' ~ forum_post.attachment) }}" alt="Image jointe" class="img-fluid">
+                    {% else %}
+                        <a href="{{ asset('uploads/' ~ forum_post.attachment) }}" target="_blank">Télécharger le fichier</a>
+                    {% endif %}
+                {% else %}
+                    <p>Aucun fichier joint.</p>
+                {% endif %}
 
                 <!-- Afficher le nombre de commentaires -->
                 <p><strong>Commentaires :</strong> {{ forum_post.commentsCount }}</p>
@@ -36,17 +97,28 @@
                                         | Modifié le {{ comment.updatedAt|date('d/m/Y H:i') }}
                                     {% endif %}
                                 </small>
-                                <div class="comment-actions">
+                                {% if forum_post.attachment %}
+                                    <p>Chemin du fichier : {{ asset('uploads/' ~ forum_post.attachment) }}</p>
+                                    {% if forum_post.attachment matches '/\\.(jpg|jpeg|png|gif)$/i' %}
+                                        <img src="{{ asset('uploads/' ~ forum_post.attachment) }}" alt="Image jointe" class="img-fluid">
+                                    {% else %}
+                                        <a href="{{ asset('uploads/' ~ forum_post.attachment) }}" target="_blank">Télécharger le fichier</a>
+                                    {% endif %}
+                                {% else %}
+                                    <p>Aucun fichier joint.</p>
+                                {% endif %}
+                                                                <div class="comment-actions">
             <a href="{{ path('app_comments_edit', {'id': comment.id}) }}" class="btn btn-modify">
-                <i class="fas fa-edit"></i> Modifier
+                <i class="fas fa-edit"></i> 
             </a>
-            <form action="{{ path('app_comments_delete', {'id': comment.id}) }}" method="post" class="form-delete">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                <button type="submit" class="btn btn-delete">
-                    <i class="fas fa-trash"></i> Supprimer
-                </button>
-            </form>
-        </div>
+            <!-- Bouton Supprimer -->
+                <form action="{{ path('app_comments_delete', {'id': comment.id}) }}" method="post" class="form-delete">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                    <button type="submit" class="btn btn-delete">
+                        <i class="fas fa-trash"></i> 
+                    </button>
+                </form>
+            </div>
                             </li>
                         {% endfor %}
                     </ul>
@@ -63,10 +135,10 @@
         <!-- Boutons de navigation -->
         <div class="mt-4">
             <a href="{{ path('app_forum_posts_index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Retour à la liste
+                <i class="fas fa-arrow-left"></i> 
             </a>
             <a href="{{ path('app_forum_posts_edit', {'id': forum_post.id}) }}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Modifier
+                <i class="fas fa-edit"></i> 
             </a>
             {{ include('forum_posts/_delete_form.html.twig') }}
         </div>

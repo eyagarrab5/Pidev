@@ -3,12 +3,43 @@
 {% block title %}Ajouter un commentaire{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un commentaire au post : {{ forum_post.title }}</h1>
+    <div class="container">
+        <h1 class="text-center my-4">Ajouter un commentaire au post : {{ forum_post.title }}</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary">Ajouter le commentaire</button>
-    {{ form_end(form) }}
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="mb-3">
+                    {{ form_label(form.content, 'Contenu du commentaire', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre commentaire...', 'rows': 4}}) }}
+                    {{ form_errors(form.content) }}
+                </div>
 
-    <a href="{{ path('app_admin_forum_posts') }}" class="btn btn-secondary">Retour à la liste des posts</a>
+                <div class="mb-3">
+                    {{ form_label(form.tags, 'Tags', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.tags, {'attr': {'class': 'form-control', 'placeholder': 'Ajoutez des tags (séparés par des virgules)'}}) }}
+                    {{ form_errors(form.tags) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.attachments, 'Pièces jointes', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.attachments, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.attachments) }}
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Ajouter le commentaire
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ path('app_admin_forum_posts') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste des posts
+            </a>
+        </div>
+    </div>
 {% endblock %}
