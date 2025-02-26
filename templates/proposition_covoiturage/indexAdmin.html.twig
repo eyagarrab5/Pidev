@@ -1,0 +1,51 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Liste de toutes les propositions{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Liste de toutes les propositions</h1>
+        
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark bg-primary text-white">
+                  <tr>
+                <th>Id Proposition</th>
+                <th>Id Conducteur </th>
+                <th>palces</th>
+                <th>Statut</th>
+                <th>Id Demande</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for proposition_covoiturage in proposition_covoiturages %}
+                      <tr>
+                <td >{{ proposition_covoiturage.id }}</td>
+                <td >{{ proposition_covoiturage.conducteurid }}</td>
+                <td >{{ proposition_covoiturage.placesDispo }}</td>
+                <td >{{ proposition_covoiturage.statut.value }}</td>
+                <td >{{ proposition_covoiturage.demande.id }}</td>
+                <td>
+                    {{ include('proposition_covoiturage/_delete_form_Admin.html.twig') }}
+                </td>
+                </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Aucune proposition trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

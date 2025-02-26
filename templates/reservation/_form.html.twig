@@ -1,0 +1,15 @@
+{% extends 'base2.html.twig' %}
+
+{% block body %}
+    <h2>Editer une réservation</h2>
+    
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+        
+        <div class="form-group">
+            {{ form_row(form.statut) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+
+    {{ form_end(form) }}
+{% endblock %}

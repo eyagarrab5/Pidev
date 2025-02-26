@@ -1,0 +1,95 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Tableau de Bord Admin{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4 text-primary">Bienvenue sur le Tableau de Bord</h1>
+    <p class="text-center text-muted">Gérez efficacement les fonctionnalités et surveillez l’activité de la plateforme.</p>
+
+    <div class="row">
+     
+       <!-- Suivi des abonnements -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">📅 Suivi des abonnements</h5>
+                    <p class="card-text">Consultez l’historique des abonnements et leur statut.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Surveillance des réservations et propositions -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">📌 Gérer les réservations & propositions</h5>
+                    <p class="card-text">Surveillez les réservations et les propositions de covoiturage des utilisateurs </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestion des véhicules -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">🚴 Ajouter et gérer les véhicules</h5>
+                    <p class="card-text">Gérez les voitures et vélos disponibles pour la location.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validation des annonces -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">✅ Contrôler les annonces</h5>
+            <p class="card-text">Surveillez et supprimez les annonces si nécessaire.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des utilisateurs -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">👥 Consulter la liste des utilisateurs</h5>
+                    <p class="card-text">Affichez et gérez les comptes des utilisateurs inscrits.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestion du forum  -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">📢 Gérer le forum </h5>
+                    <p class="card-text">Modérez le forum et répondez aux réclamations des utilisateurs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        background: #ffffff;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .card-text {
+        color: #6c757d;
+    }
+</style>
+
+{% endblock %}

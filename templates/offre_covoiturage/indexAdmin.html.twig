@@ -1,0 +1,56 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Liste de toutes les offres{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Liste de toutes les offres</h1>
+        
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark bg-primary text-white">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Départ</th>
+                    <th>Destination</th>
+                    <th>Prix</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offre_covoiturage in offre_covoiturages %}
+                    <tr>
+                        <td>{{ offre_covoiturage.id }}</td>
+                        <td>{{ offre_covoiturage.date ? offre_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}</td>
+
+                        <td>{{ offre_covoiturage.depart }}</td>
+                        <td>{{ offre_covoiturage.destination }}</td>
+
+                        <td>{{ offre_covoiturage.prix }} dt</td>
+                        <td>{{ offre_covoiturage.statut.value}}</td>
+                        <td class="d-flex">
+                                           {{ include('offre_covoiturage/_delete_form_Admin.html.twig') }}
+                                        
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Aucune offre trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

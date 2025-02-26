@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservations de Covoiturage{% endblock %}
+
+{% block body %}
+<div class="container">
+{% if reservations is not empty %}
+        <div class="list-group" style="max-width: 600px; margin: 0 auto;">
+        {% for reservation in reservations %}
+                <div class="list-group-item list-group-item-action mb-2 p-3" style="font-size: 0.9rem; padding: 12px 16px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-1" style="font-size: 1rem;">Reservation de <strong>{{ reservation.offre.depart }}</strong> à <strong>{{ reservation.offre.destination }}</strong></h5>
+                        <span class="text-success" style="font-size: 0.8rem;">{{ reservation.statut.value ?? reservation.statut }}</span>
+                    </div>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Nom conducteur :</strong> Conducteur 1 </p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Num conducteur :</strong> 25883328 </p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Matricule de la véhicule :</strong> {{ reservation.offre.matVehicule }}</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><strong>Date de départ :</strong> {{ reservation.offre.date ? reservation.offre.date|date('Y-m-d H:i') : 'Non spécifiée' }}</p>
+                    <div class="d-flex justify-content-end gap-2">
+                        {{ include('reservation/_delete_form.html.twig', { 'id': reservation.id }) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">Aucune réservation de covoiturage disponible pour le moment.</p>
+    {% endif %}
+</div>
+
+{% block stylesheets %}
+    <style>
+        /* Arrière-plan */
+        body {
+            background-image: url('{{ asset('img/pic5.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Styles pour les boutons */
+        .btn-edit {
+            background-color: #07005a; /* Bleu clair */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            background-color:#cbe0ff; /* Bleu plus foncé */
+        }
+
+        
+    </style>
+{% endblock %}
+{% endblock %}

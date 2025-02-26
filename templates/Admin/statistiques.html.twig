@@ -1,0 +1,168 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Statistiques - Administration{% endblock %}
+
+{% block body %}
+    <h1>Statistiques</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Propositions de covoiturage</h3>
+                <canvas id="chartProps"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h3>Réservations</h3>
+                <canvas id="chartResv"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Demandes de covoiturage</h3>
+                <canvas id="chartDemands"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h3>Offres de covoiturage</h3>
+                <canvas id="chartOffers"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Données pour chaque graphique
+        const dataProps = {{ dataProps|json_encode()|raw }};
+        const dataResv = {{ dataResv|json_encode()|raw }};
+        const dataDemands = {{ dataDemands|json_encode()|raw }};
+        const dataOffers = {{ dataOffers|json_encode()|raw }};
+        const labels = {{ dataLabels|json_encode()|raw }};
+        
+        // Graphique pour les propositions de covoiturage
+        new Chart(document.getElementById('chartProps'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Propositions de covoiturage',
+                    data: dataProps,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Graphique pour les réservations
+        new Chart(document.getElementById('chartResv'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Réservations',
+                    data: dataResv,
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Graphique pour les demandes de covoiturage
+        new Chart(document.getElementById('chartDemands'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Demandes de covoiturage',
+                    data: dataDemands,
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Graphique pour les offres de covoiturage
+        new Chart(document.getElementById('chartOffers'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Offres de covoiturage',
+                    data: dataOffers,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,171 @@
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Demande de Covoiturage</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #007bff, #00c6ff);
+        }
+
+        .container-wrapper {
+            display: flex;
+            width: 120%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #cbe0ff;
+            margin-top: -270px;
+            margin-right: 244px;
+        }
+
+        .image-container {
+            flex: 1;
+            background: url('{{ asset('img/pic7.jpg') }}') center/cover;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 12px;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 0.3rem;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: -1px;
+            border-radius: 12px;
+            border: 1px solid #ced4da;
+            transition: box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+        }
+
+        button.btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            border: none;
+        }
+
+        button.btn:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .container-wrapper {
+                flex-direction: column;
+            }
+
+            .image-container {
+                height: 250px;
+            }
+        }
+
+        /* Style pour afficher les erreurs */
+        .text-danger {
+            font-size: 0.875em;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-wrapper">
+    <div class="image-container"></div>
+
+    <div class="form-container">
+                <h3 style="text-align: center;font-family: 'Poppins', sans-serif;">Ajouter une nouvelle Demande</h3>
+
+        {{ form_start(form) }}
+
+        <div class="form-group">
+            {{ form_label(form.depart, 'Départ', {'attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.depart, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le lieu de départ'}}) }}
+            <div class="text-danger">
+                {{ form_errors(form.depart) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.destination, 'Destination', {'attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.destination, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la destination'}}) }}
+            <div class="text-danger">
+                {{ form_errors(form.destination) }}
+            </div>
+        </div>
+
+      <div class="form-group">
+    {{ form_label(form.date, 'Date', {'attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.date, {
+        'attr': {'class': 'form-control'},
+        'data': date()|date('Y-m-d\\TH:i')
+    }) }}
+    <div class="text-danger">
+        {{ form_errors(form.date) }}
+    </div>
+</div>
+        <div class="form-group">
+            {{ form_label(form.budget, 'Budget', {'attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.budget, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre budget'}}) }}
+            <div class="text-danger">
+                {{ form_errors(form.budget) }}
+            </div>
+        </div>
+
+        <button type="submit" class="btn">{{ button_label|default('Enregistrer') }}</button>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+</body>
+</html>

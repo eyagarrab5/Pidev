@@ -1,0 +1,32 @@
+.card {
+    border: 30px solid #007bff; /* Bordure fine bleue */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Effet de déplacement */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Ombre accentuée au survol */
+}
+
+.card-body {
+    padding: 20px; /* Ajout d'espace pour rendre la carte aérée */
+}
+
+.btn-primary, .btn-warning {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover, .btn-warning:hover {
+    transform: scale(1.05);
+    background-color: #0056b3;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.text-danger {
+    font-weight: bold;
+}

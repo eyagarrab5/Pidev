@@ -2,15 +2,18 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Starter Page - COVOIMOB COVOIMOB Template</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <title>{% block title %}Index - Bootslander Bootstrap Template{% endblock %}</title>
+  <meta name="description" content="{% block description %}{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}{% endblock %}">
 
   <!-- Favicons -->
-  <link href="{{asset('assets/img/favicon.png')}}" rel="icon">
-  <link href="{{asset('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+  <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
+  <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -18,130 +21,80 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/aos/aos.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
+  <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Bootslander
-  * Template URL: https://bootstrapmade.com/bootslander-free-bootstrap-landing-page-template/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+
+  {% block stylesheets %}{% endblock %}
 </head>
 
-<body class="starter-page-page">
+<body class="index-page scrolled">
 
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="{{ path('app_demande_covoiturage_index') }}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="{{asset('assets/img/logo.png')}}" alt=""> -->
-        <h1 class="sitename">COVOIMOB</h1>
+        <!-- <img src="{{ asset('assets/img/logo.png') }}" alt=""> -->
+<h1 style="color: #07005a;">CovoitMob</h1>
       </a>
-
+    {% block navbar %}
       <nav id="navmenu" class="navmenu">
         <ul>
-  <li><a href="{{ path('app_user_new') }}">Nouvel utilisateur</a></li>
-</ul>
+          <li class="dropdown"><a href="#"><span>Demandes</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+             <ul>
+               <li><a href="{{ path('mesDemandes', {'id': 456}) }}">Mes Demandes</a></li>
+               <li><a href="{{ path('app_demande_covoiturage_index') }}">Les demandes publiées par d'autres personnes</a></li>
+            </ul>
+          </li>  
+           <li class="dropdown"><a href="#"><span>Offres</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+             <ul>
+               <li><a href="{{ path('mesOffres', {'id': 123}) }}">Mes Offres</a></li>
+               <li><a href="{{ path('app_offre_covoiturage_index') }}">Les Offres publiées par d'autres personnes</a></li>
+            </ul>
+          </li>          
+         
+          <li class="dropdown"><a href="#"><span>Ajouter</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{{ path('app_demande_covoiturage_new') }}"> Demande</a></li>
+              <li><a href="{{ path('app_offre_covoiturage_new') }}">Offre</a></li>
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#"><span>Listes</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{{ path('listePropositionsRecues',{'id': 456}) }}">Propositions Recues</a></li>
+              <li><a href="{{ path('listeReservationsRecues',{'id': 123}) }}">Réservations Recues</a></li>
+              <li><a href="{{ path('mesPropositions',{'id': 123}) }}">Mes Propositions</a></li>
+              <li><a href="{{ path('mesReservations',{'id': 456}) }}">Mes réservations </a></li>
 
-<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-</nav>
-
-</div>
-</header>
-
-<main class="main">
-
-  <!-- Page Title -->
-  <div class="page-title dark-background" data-aos="fade">
-    <div class="heading">
-    </div>            
-  </div><!-- End Page Title -->
-
-  {% block body %}
-  <br><br><br>
-  {% endblock %}    
-
-</main>
-
-<footer id="footer" class="footer dark-background">
-
-  <div class="container footer-top">
-    <div class="row gy-4">
-      <div class="col-lg-4 col-md-6 footer-about">
-        <a href="index.html" class="logo d-flex align-items-center">
-          <span class="sitename">GESTION UTILISATEURS</span>
-        </a>
-        <div class="footer-contact pt-3">
-          <p>Ariana Soghra</p>
-          <p class="mt-3"><strong>Téléphone:</strong> <span>+216 546 182</span></p>
-          <p><strong>Email:</strong> <span>info@example.com</span></p>
-        </div>
-        <div class="social-links d-flex mt-4">
-          <a href=""><i class="bi bi-twitter-x"></i></a>
-          <a href=""><i class="bi bi-facebook"></i></a>
-          <a href=""><i class="bi bi-instagram"></i></a>
-          <a href=""><i class="bi bi-linkedin"></i></a>
-        </div>
-      </div>
-
-      <div class="col-lg-2 col-md-3 footer-links">
-        <h4>Liens utiles</h4>
-        <ul>
-          <li><a href="{{ path('app_user_new') }}">Créer un utilisateur</a></li>
+            </ul>
+          </li>
+           <li class="dropdown"><a href="#"><span>Favoris</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{{ path('app_demande_covoiturage_new') }}">Des demandes en favoris</a></li>
+              <li><a href="{{ path('app_offre_covoiturage_new') }}">Des offres en favoris</a></li>
+            </ul>
+          </li>
         </ul>
-      </div>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
 
-      <div class="col-lg-2 col-md-3 footer-links">
-        <h4>Nos Services</h4>
-        <ul>
-          <li><a href="#">Gestion des utilisateurs</a></li>
-          <li><a href="#">Gestion des rôles</a></li>
-          <li><a href="#">Sécurité et authentification</a></li>
-          <li><a href="#">Vérification des comptes</a></li>
-          <li><a href="#">Support et assistance</a></li>
-        </ul>
-      </div>
     </div>
-  </div>
-</footer>
+   {% endblock %}
 
-        </div>
+  </header>
 
-        <div class="col-lg-4 col-md-12 footer-newsletter">
-          <h4>Notre newsletter</h4>
-          <p>Abonnez-vous à notre newsletter et recevez les dernières nouveautés sur nos produits et services !</p>
-          <form action="forms/newsletter.php" method="post" class="php-email-form">
-            <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
-            <div class="loading">Loading</div>
-            <div class="error-message"></div>
-            <div class="sent-message">Your subscription request has been sent. Thank you!</div>
-          </form>
-        </div>
+  <main class="main">
+    {% block body %}{% endblock %}
+  </main>
 
-      </div>
-    </div>
-  <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">COVOIMOB</strong> <span>All Rights Reserved</span></p>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">VOVOIMOBMade</a> Distributed By <a href="https://themewagon.com">Ctrl Freaks</a>
-      </div>
-    </div>
-   
-
-  </footer>
+ 
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -150,16 +103,17 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
-  <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>
-  <script src="{{asset('assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/purecounter/purecounter_vanilla.js')}}"></script>
-  <script src="{{asset('assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+  <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
+  <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+  <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+  <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
 
   <!-- Main JS File -->
-  <script src="{{asset('assets/js/main.js')}}"></script>
+  <script src="{{ asset('assets/js/main.js') }}"></script>
 
+  {% block javascripts %}{% endblock %}
 </body>
 
 </html>

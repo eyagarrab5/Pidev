@@ -1,0 +1,56 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Demandes Covoiturages disponibles{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Liste de toutes les demandes</h1>
+        
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark bg-primary text-white">
+                 <tr>
+                <th>Id Demande</th>
+                <th>Id Passager </th>
+                <th>Départ</th>
+                <th>Destination</th>
+                <th>Date</th>
+                <th>Budget</th>
+                <th>Statut</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for demande_covoiturage in demande_covoiturages %}
+                      <tr>
+                    <td>{{ demande_covoiturage.id }}</td>
+                    <td>{{ demande_covoiturage.passagerid}}</td>
+                    <td>{{ demande_covoiturage.depart }}</td>
+                    <td>{{ demande_covoiturage.destination }}</td>
+                    <td>{{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}</td>
+                    <td>{{ demande_covoiturage.budget }} dt</td>
+                     <td>{{ demande_covoiturage.Statut.value }}</td>
+
+                    <td>
+                    {{ include('demande_covoiturage/_delete_form_Admin.html.twig') }}
+                    </td>
+                </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Aucune demande trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

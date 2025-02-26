@@ -1,0 +1,135 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.demandes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.demande-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 280px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.demande-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.demande-info p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+    margin: 0.5rem 0;
+}
+
+.demande-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-propose {
+    background-color:rgb(0, 4, 84);
+}
+
+.btn-propose:hover {
+    background-color: rgb(0, 4, 84);
+}
+
+.no-records {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+    padding: 2rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .demande-card {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+
+    .demandes-container {
+        padding: 1rem;
+        justify-content: flex-start;
+    }
+    body.modal-open {
+        overflow: hidden;
+    }
+    
+    /* Effet de flou sur l’arrière-plan */
+    .modal-backdrop {
+        backdrop-filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.5); /* Assombrir davantage pour un meilleur contraste */
+    }
+    
+/* Centrer parfaitement la modale */
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    min-height: 100vh; /* Assurer un bon centrage */
+}
+
+/* Ajuster la taille et le style de la modale */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation d’apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+/* Centrage vertical et horizontal de la modale */
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Empêcher que la modale dépasse la hauteur de l'écran */
+.modal-content {
+    max-width: 500px; /* Ajuste la largeur si nécessaire */
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+}

@@ -1,0 +1,49 @@
+/* formOffre.css */
+
+/* Form container style */
+.form-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom form label style */
+.custom-form .form-group label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Input and select styles */
+.custom-form .form-control {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Focus effect */
+.custom-form .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Submit button style */
+.custom-form .btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.125rem;
+    cursor: pointer;
+}
+
+.custom-form .btn:hover {
+    background-color: #0056b3;
+}

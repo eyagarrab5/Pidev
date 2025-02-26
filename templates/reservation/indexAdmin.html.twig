@@ -1,0 +1,50 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Liste de toutes les réservations{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Liste de toutes les réservations</h1>
+        
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark bg-primary text-white">
+                 <tr>
+                <th>Id</th>
+                <th>Id Passager</th>
+                <th>Statut</th>
+                <th>Id Offre</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reservation in reservations %}
+                    <tr>
+                         <td>{{ reservation.id }}</td>
+                <td>{{ reservation.passagerId }}</td>
+                <td>{{ reservation.statut.value }}</td>
+                <td>{{ reservation.offre.id }}</td>
+                <td class="d-flex">
+                    {{ include('reservation/_delete_form_Admin.html.twig') }}
+                                        
+                </td>
+                </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Aucune réservation trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
