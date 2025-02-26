@@ -11,17 +11,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 #[Route('/vehicule')]
 final class VehiculeController extends AbstractController
 {
     #[Route(name: 'app_vehicule_index', methods: ['GET'])]
-    public function index(VehiculeRepository $vehiculeRepository): Response
-    {
-        return $this->render('vehicule/index.html.twig', [
-            'vehicules' => $vehiculeRepository->findAll(),
-        ]);
-    }
+    public function index(VehiculeRepository $vehiculeRepository, Request $request, PaginatorInterface $paginator): Response
+{
+    // Créez une requête pour récupérer tous les véhicules
+    $query = $vehiculeRepository->createQueryBuilder('v')->getQuery();
+
+    // Paginez les résultats
+    $vehicules = $paginator->paginate(
+        $query, // Requête à paginer
+        $request->query->getInt('page', 1), // Numéro de page par défaut
+        6 // Nombre d'éléments par page
+    );
+
+    // Passez les résultats paginés au template
+    return $this->render('vehicule/index.html.twig', [
+        'vehicules' => $vehicules, // Utilisez $vehicules (objet paginé) ici
+    ]);
+}
 
 
     #[Route('/back',name: 'backk', methods: ['GET'])]

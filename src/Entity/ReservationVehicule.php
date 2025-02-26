@@ -29,7 +29,7 @@ class ReservationVehicule
     #[Assert\Type("\DateTimeInterface", message: "La date de fin doit être une date valide")]
     #[Assert\GreaterThanOrEqual(
         propertyPath: "date_debut",
-        message: "La date de fin doit être postérieure ou égale à la date de début"
+        message: "La date de debut doit être postérieure ou égale à la date de début"
     )]
     private ?\DateTimeInterface $date_fin = null;
 

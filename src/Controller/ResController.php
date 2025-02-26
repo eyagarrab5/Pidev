@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Vehicule;
 use App\Entity\ReservationVehicule;
 use App\Form\ReservationVehiculeType;
 use App\Repository\ReservationVehiculeRepository;

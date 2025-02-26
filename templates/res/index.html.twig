@@ -23,7 +23,7 @@
                         <td>{{ reservation_vehicule.id }}</td>
                         <td>{{ reservation_vehicule.dateDebut ? reservation_vehicule.dateDebut|date('Y-m-d') : 'N/A' }}</td>
                         <td>{{ reservation_vehicule.dateFin ? reservation_vehicule.dateFin|date('Y-m-d') : 'N/A' }}</td>
-                        <td>{{ reservation_vehicule.prixTotal }} €</td>
+                        <td>{{ reservation_vehicule.prixTotal }} TND</td>
                         <td>
                             <span class="badge {% if reservation_vehicule.status == 'Confirmée' %}bg-success{% elseif reservation_vehicule.status == 'En attente' %}bg-warning{% else %}bg-secondary{% endif %}">
                                 {{ reservation_vehicule.status }}

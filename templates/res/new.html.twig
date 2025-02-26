@@ -16,33 +16,34 @@
         <!-- Right Side: Form -->
         <div class="col-md-7 d-flex flex-column justify-content-center" style="padding: 20px;">
             <h2 class="fw-bold text-primary text-center mb-3">Nouvelle Réservation</h2>
-        {{ form_start(form) }}
+        {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
                 <div class="mb-3">
                     {{ form_label(form.date_debut, 'Date de début') }}
                     {{ form_widget(form.date_debut, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez la date'}}) }}
-                        
+                    {{ form_errors(form.date_debut) }} {# Ajout de l'affichage des erreurs #}
                 </div>
+
                 <div class="mb-3">
                     {{ form_label(form.date_fin, 'Date de fin') }}
                     {{ form_widget(form.date_fin, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez la date'}}) }}
-          
+                    {{ form_errors(form.date_fin) }}
                 </div>
                 <div class="mb-3">
                     {{ form_label(form.prix_total, 'Prix Total') }}
                     {{ form_widget(form.prix_total, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prix'}}) }}
-                     
+                     {{ form_errors(form.prix_total) }}
                 </div>
                 <div class="mb-3">
                     {{ form_label(form.status, 'Statut') }}
                     {{ form_widget(form.status, {'attr': {'class': 'form-control', 'placeholder': 'Statut de la réservation'}}) }}
-    
+                    {{ form_errors(form.status) }}
                 </div>
                 <div class="d-grid">
                     <button class="btn btn-primary btn-lg">{{ button_label|default('Save') }}</button>
                 </div>
             {{ form_end(form) }}
             <div class="text-center mt-3">
-                <a href="{{ path('app_res_index') }}" class="text-decoration-none">Retour à la liste</a>
+                <a href="{{ path('app_vehicule_index') }}" class="text-decoration-none">Retour à la liste</a>
             </div>
         </div>
     </div>

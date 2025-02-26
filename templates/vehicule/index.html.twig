@@ -17,8 +17,8 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ vehicule.typeVehicule }} - {{ vehicule.modele }}</h5>
                             <p class="card-text"><strong>Rôle :</strong> {{ vehicule.role }}</p>
-                            <p class="card-text"><strong>Prix par heure :</strong> {{ vehicule.prixParHeure }} €</p>
-                            <p class="card-text"><strong>Prix par jour :</strong> {{ vehicule.prixParJour }} €</p>
+                            <p class="card-text"><strong>Prix par heure :</strong> {{ vehicule.prixParHeure }}TND</p>
+                            <p class="card-text"><strong>Prix par jour :</strong> {{ vehicule.prixParJour }}TND </p>
                             <p class="card-text"><strong>Disponibilité :</strong> {{ vehicule.disponibilite }}</p>
                             <p class="card-text"><strong>Lieu de retrait :</strong> {{ vehicule.lieuRetrait }}</p>
                             <div class="actions">
@@ -34,7 +34,14 @@
                 <p class="text-center">Aucun véhicule trouvé.</p>
             {% endfor %}
         </div>
+        <div class="navigation">
+    <div class="d-flex justify-content-center mt-4">
+    {{ knp_pagination_render(vehicules) }}
+</div>
+
+</div>
     </div>
+    
 {% endblock %}
 {% block stylesheet%}
 body {
