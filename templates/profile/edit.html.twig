@@ -1,0 +1,18 @@
+{# templates/profile/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le profil{% endblock %}
+
+{% block body %}
+    <h1>Modifier votre profil</h1>
+
+    {{ form_start(profileForm) }}
+        {{ form_row(profileForm.firstName) }}
+        {{ form_row(profileForm.lastName) }}
+        {{ form_row(profileForm.telephone) }}
+        {{ form_row(profileForm.vehicule) }}
+        {{ form_row(profileForm.imageFile) }}
+
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    {{ form_end(profileForm) }}
+{% endblock %}

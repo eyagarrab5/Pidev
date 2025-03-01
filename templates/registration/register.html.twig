@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>covoitmob</title>
+    <link rel="shortcut icon" type="image/png" href="{{ asset('/assetsFB/images/logos/favicon.png') }}" />
+    <link rel="stylesheet" href="{{ asset('/assetsFB/css/styles.css') }}" />
+</head>
+
+<body>
+  <!-- Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="row justify-content-center w-100">
+          <div class="col-md-8 col-lg-6 col-xxl-3">
+            <div class="card mb-0">
+              <div class="card-body">
+                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                    <img src="{{ asset('/assetsFB/images/logos/covoitmob_logo.jpg') }}" width="180" alt="" />
+                </a>
+                <p class="text-center">Let's share our rides</p>
+                {{ form_start(registrationForm) }}
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                    {% endfor %}
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'id': 'email'}}) }}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control', 'id': 'password'}}) }}
+                    </div>
+
+                    <!-- First Name -->
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        {{ form_widget(registrationForm.first_name, {'attr': {'class': 'form-control', 'id': 'firstName'}}) }}
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        {{ form_widget(registrationForm.last_name, {'attr': {'class': 'form-control', 'id': 'lastName'}}) }}
+                    </div>
+
+                    <!-- Telephone -->
+                    <div class="mb-3">
+                        <label for="telephone" class="form-label">Telephone</label>
+                        {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control', 'id': 'telephone'}}) }}
+                    </div>
+
+                    <!-- Vehicule -->
+                    <div class="mb-3">
+                        <label for="vehicule" class="form-label">Vehicule</label>
+                        {{ form_widget(registrationForm.vehicule, {'attr': {'class': 'form-control', 'id': 'vehicule'}}) }}
+                    </div>
+
+                    <!-- Image URL -->
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image URL</label>
+                        {{ form_widget(registrationForm.image, {'attr': {'class': 'form-control', 'id': 'image'}}) }}
+                    </div>
+
+                    
+
+                    <!-- Auth Method -->
+                    <div class="mb-3">
+                        <label for="authMethod" class="form-label">Auth Method</label>
+                        {{ form_widget(registrationForm.auth_method, {'attr': {'class': 'form-control', 'id': 'authMethod'}}) }}
+                    </div>
+
+                    <!-- Agree to Terms -->
+                    <div class="form-check mb-4">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input', 'id': 'agreeTerms'}}) }}
+                        <label class="form-check-label" for="agreeTerms">I agree to the terms</label>
+                    </div>
+
+                    <!-- Sign Up Button -->
+                    <button type="submit" class="btn btn-primary w-100 py-3 fs-4 mb-4 rounded-2">Sign Up</button>
+                {{ form_end(registrationForm) }}
+
+                <!-- Sign In Link -->
+                <div class="d-flex align-items-center justify-content-center">
+                    <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
+                    <a class="text-primary fw-bold ms-2" href="{{ path('app_login') }}">Sign In</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
