@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Routing\Attribute\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Dompdf\Dompdf;
+
+
+
 
 
 #[Route('/vehicule')]
@@ -131,4 +135,32 @@ final class VehiculeController extends AbstractController
 
         return $this->redirectToRoute('backk');
     }
+    
+#[Route('/vehicule/{id}/pdf', name: 'app_vehicule_pdf')]
+public function generatePdf(Vehicule $vehicule): Response
+{
+    // Configuration de DomPDF
+    
+    $dompdf = new Dompdf();
+    
+    
+    // Génération du HTML
+    $html = $this->renderView('vehicule/pdf_template.html.twig', [
+        'vehicule' => $vehicule
+    ]);
+
+    // Conversion en PDF
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // Création de la réponse
+    $response = new Response($dompdf->output());
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->headers->set('Content-Disposition', 'attachment; filename="vehicule_'.$vehicule->getId().'.pdf"');
+
+    return $response;
+}
+
+    
 }

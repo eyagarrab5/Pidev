@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Détails du Véhicule #{{ vehicule.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px; /* Ajustez la taille du logo selon vos besoins */
+            height: auto;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .vehicule-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 8px;
+        }
+        .details {
+            margin-top: 20px;
+        }
+        .details p {
+            margin: 10px 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .details strong {
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+    
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{{ absolute_url(asset('assets/img/logo.png')) }}" alt="Logo COVIDITMOB">
+        </div>
+
+        <h1>Détails du Véhicule</h1>
+
+        <!-- Afficher l'image du véhicule -->
+        {% if vehicule.image %}
+            <img src="{{ absolute_url(asset('uploads/vehicules/' ~ vehicule.image)) }}" class="vehicule-image" alt="Image du véhicule">
+        {% else %}
+            <p class="details">Aucune image disponible</p>
+        {% endif %}
+
+        <div class="details">
+            <p><strong>Type de Véhicule :</strong> {{ vehicule.typeVehicule }}</p>
+            <p><strong>Modèle :</strong> {{ vehicule.modele }}</p>
+            <p><strong>Rôle :</strong> {{ vehicule.role }}</p>
+            <p><strong>Prix par heure :</strong> {{ vehicule.prixParHeure }} TND</p>
+            <p><strong>Prix par jour :</strong> {{ vehicule.prixParJour }} TND</p>
+            <p><strong>Disponibilité :</strong> {{ vehicule.disponibilite }}</p>
+            <p><strong>Lieu de retrait :</strong> {{ vehicule.lieuRetrait }}</p>
+        </div>
+
+        <div class="footer">
+            <p>Merci d'avoir choisi notre service de location de véhicules.</p>
+        </div>
+    </div>
+</body>
+</html>

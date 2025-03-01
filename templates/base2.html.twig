@@ -48,6 +48,12 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
+
+    <li class="nav-item">
+    <a class="nav-link" href="{{ path('app_res_statistics') }}">
+        <i class="fas fa-chart-bar"></i> Statistiques
+    </a>
+</li>
       <!-- Navbar Search -->
       <li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
@@ -299,6 +305,7 @@
 <!-- Bootstrap 4 -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- ChartJS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
 <!-- Sparkline -->
 <script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>

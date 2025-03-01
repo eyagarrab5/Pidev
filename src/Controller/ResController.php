@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 #[Route('/res')]
 final class ResController extends AbstractController
@@ -144,4 +145,22 @@ final class ResController extends AbstractController
 
         return $this->redirectToRoute('app_res_index', [], Response::HTTP_SEE_OTHER);
     }
+    
+
+#[Route('/res/statistics', name: 'app_res_statistics', methods: ['GET'])]
+public function statistics(ReservationVehiculeRepository $reservationVehiculeRepository): Response
+{
+    // Récupérer les réservations groupées par date de début
+    $reservationsByDate = $reservationVehiculeRepository->createQueryBuilder('r')
+        ->select('r.date_debut as date, COUNT(r.id) as count')
+        ->groupBy('r.date_debut')
+        ->orderBy('r.date_debut', 'ASC')
+        ->getQuery()
+        ->getResult();
+
+    return $this->render('res/statistics.html.twig', [
+        'reservationsByDate' => $reservationsByDate,
+    ]);
+}
+
 }
