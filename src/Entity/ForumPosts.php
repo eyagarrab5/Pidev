@@ -45,6 +45,9 @@ class ForumPosts
     #[ORM\Column(nullable: true)]
     private ?int $likes = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $dislikes = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(
         max: 255,
@@ -64,6 +67,10 @@ class ForumPosts
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(type: "boolean", options: ["default" => false])]
+    private bool $isPinned = false;
+
 
 
     public function __construct()
@@ -179,12 +186,12 @@ class ForumPosts
         return $this;
     }
 
-    public function getCommentsCount(): ?int
+        public function getCommentsCount(): ?int
     {
-        return count($this->comments);
+        return $this->comments_count;
     }
 
-    public function setCommentsCount(int $comments_count): static
+    public function setCommentsCount(int $comments_count): self
     {
         $this->comments_count = $comments_count;
 
@@ -222,6 +229,34 @@ class ForumPosts
     public function setUser(?User $user): self
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getDislikes(): ?int
+    {
+        return $this->dislikes;
+    }
+
+    public function setDislikes(?int $dislikes): static
+    {
+        $this->dislikes = $dislikes;
+
+        return $this;
+    }
+
+    public function incrementDislikes(): void
+    {
+        $this->dislikes++;
+    }
+
+    public function isPinned(): bool
+    {
+        return $this->isPinned;
+    }
+
+    public function setIsPinned(bool $isPinned): self
+    {
+        $this->isPinned = $isPinned;
         return $this;
     }
 

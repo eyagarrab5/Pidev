@@ -22,51 +22,37 @@ final class ForumPostsController extends AbstractController{
     #[Route(name: 'app_forum_posts_index', methods: ['GET'])]
     public function index(Request $request, ForumPostsRepository $forumPostsRepository, PaginatorInterface $paginator): Response
     {
-        $categories = [
-            'Covoiturage' => [
-                'Trajets réguliers',
-                'Trajets occasionnels',
-                'Recherche de covoiturage',
-            ],
-            'Location de véhicules' => [
-                'Vélos électriques',
-                'Voitures électriques',
-            ],
-        ];
    // Récupérer les paramètres de recherche et de tri
    $search = $request->query->get('search');
     $sort = $request->query->get('sort', 'newest');
+    $category = $request->query->get('category'); // Récupérer la catégorie sélectionnée
 
-    // Créer la requête de base pour filtrer les posts
-    /*$queryBuilder = $forumPostsRepository->createQueryBuilder('fp')
-        ->andWhere('fp.title LIKE :search OR fp.content LIKE :search')
-        ->setParameter('search', '%' . $search . '%');
-*/
-    // Appliquer le tri en fonction du paramètre
-   
+    // Récupérer les posts épinglés et les autres posts en fonction de la catégorie
+    $pinnedPosts = $forumPostsRepository->findPinnedPosts($search, $sort, $category);
+    // Récupérer les autres posts avec le tri spécifié
+    $otherPosts = $forumPostsRepository->findBySearchAndSort($search, $sort, $category);
 
+    // Combiner les résultats (posts épinglés en premier)
+    $allPosts = array_merge($pinnedPosts, $otherPosts);
 
     // Paginer les résultats
     $forumPosts = $paginator->paginate(
 
-         $forumPostsRepository->findBySearchAndSort($search, $sort), 
+        $allPosts,
         $request->query->getInt('page', 1), // Numéro de page
         5 // Nombre d'éléments par page
     );
-    /*$forumPosts = $queryBuilder->getQuery()->getResult();
-        // Appeler la méthode du repository pour filtrer et trier les posts
-        $forumPosts = $forumPostsRepository->findBySearchAndSort($search, $sort);
-        $forumPosts = $forumPostsRepository->findAll();
-        dump($forumPosts); // Ajoutez cette ligne pour déboguer
-        $forumPosts = $forumPostsRepository->createQueryBuilder('p')
-        ->leftJoin('p.comments', 'c')
-        ->addSelect('c')
-        ->getQuery()
-        ->getResult();*/
+    
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('forum_posts/index.html.twig', [
+                'forum_posts' => $forumPosts,
+                'selected_category' => $category, // Passer la catégorie sélectionnée au template
+            ]);
+        }
 
         return $this->render('forum_posts/index.html.twig', [
             'forum_posts' => $forumPosts,
-            'categories' => $categories,
+            'selected_category' => $category, // Passer la catégorie sélectionnée au template
         ]);
     }
 
@@ -172,7 +158,11 @@ final class ForumPostsController extends AbstractController{
         if ($this->isCsrfTokenValid('delete'.$forumPost->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($forumPost);
             $entityManager->flush();
+            $this->addFlash('success', 'Le post a été supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
         }
+    
 
         return $this->redirectToRoute('app_forum_posts_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -180,6 +170,16 @@ final class ForumPostsController extends AbstractController{
     public function like(ForumPosts $forumPost, EntityManagerInterface $entityManager): Response
     {
         $forumPost->incrementLikes();
+        $entityManager->persist($forumPost);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_forum_posts_index', ['id' => $forumPost->getId()]);
+    }
+
+    #[Route('/{id}/dislike', name: 'app_forum_posts_dislike', methods: ['POST'])]
+    public function dislike(ForumPosts $forumPost, EntityManagerInterface $entityManager): Response
+    {
+        $forumPost->incrementDislikes();
         $entityManager->persist($forumPost);
         $entityManager->flush();
 
@@ -197,7 +197,52 @@ final class ForumPostsController extends AbstractController{
         ]);
     }
 
+    #[Route('/{id}/pin', name: 'app_forum_posts_pin', methods: ['POST'])]
+    public function pin(ForumPosts $forumPost, EntityManagerInterface $entityManager): Response
+    {
+        $forumPost->setIsPinned(!$forumPost->isPinned());
+        $entityManager->persist($forumPost);
+        $entityManager->flush();
+
+        $this->addFlash('success', $forumPost->isPinned() ? 'Post épinglé avec succès.' : 'Post désépinglé avec succès.');
+        return $this->redirectToRoute('app_forum_posts_index');
+    }
+    #[Route('/forum/categories', name: 'app_forum_categories', methods: ['GET'])]
+    public function categories(): Response
+    {
+        $categories = [
+            'Covoiturage' => [
+                'Expériences de covoiturage',
+                'Budget & Partage des frais',
+            ],
+            'Véhicules' => [
+                'Location de véhicules',
+                'Entretien & Sécurité',
+            ],
+            'Conseils' => [
+                'Astuces & Conseils',
+            ],
+        ];
     
-        
+        return $this->render('forum_posts/categories.html.twig', [
+            'categories' => $categories,
+        ]);
+    }  
+    
+    #[Route('/forum/posts/category/{category}', name: 'app_forum_posts_by_category', methods: ['GET'])]
+    public function postsByCategory(string $category, Request $request, ForumPostsRepository $forumPostsRepository, PaginatorInterface $paginator): Response
+    {
+        // Récupérer les posts de la catégorie spécifiée
+        $forumPosts = $paginator->paginate(
+            $forumPostsRepository->findByCategory($category),
+            $request->query->getInt('page', 1), // Numéro de page
+            5 // Nombre d'éléments par page
+        );
+
+        return $this->render('forum_posts/index.html.twig', [
+            'forum_posts' => $forumPosts,
+            'category' => $category,
+        ]);
+    }
 
 }

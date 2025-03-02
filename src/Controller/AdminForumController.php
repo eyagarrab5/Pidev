@@ -17,13 +17,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminForumController extends AbstractController
 {
     #[Route('/posts', name: 'app_admin_forum_posts')]
-    public function posts(ForumPostsRepository $forumPostsRepository): Response
+    public function posts(Request $request, ForumPostsRepository $forumPostsRepository): Response
     {
+        $sort = $request->query->get('sort', 'newest');
+        $search = $request->query->get('search'); 
+
+        // Récupérer tous les posts avec leurs commentaires
+        $forumPosts = $forumPostsRepository->findBySearchAndSort($search, $sort);
+
         // Récupérer tous les posts avec leurs commentaires
         $forumPosts = $forumPostsRepository->findAllWithComments();
+        
+        // Récupérer les statistiques
+        $totalPosts = $forumPostsRepository->getTotalPosts();
+        $totalComments = $forumPostsRepository->getTotalComments();
+        $mostLikedPost = $forumPostsRepository->getMostLikedPost();
+        $mostCommentedPost = $forumPostsRepository->getMostCommentedPost();
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('admin/posts.html.twig', [
+                'forum_posts' => $forumPosts,
+                'ajax_request' => true, // Ajouter un indicateur pour les requêtes AJAX
+            ]);
+        }
 
         return $this->render('admin/posts.html.twig', [
             'forum_posts' => $forumPosts,
+            'total_posts' => $totalPosts,
+            'total_comments' => $totalComments,
+            'most_liked_post' => $mostLikedPost,
+            'most_commented_post' => $mostCommentedPost,
+            'ajax_request' => false
         ]);
     }
 
@@ -49,8 +73,15 @@ class AdminForumController extends AbstractController
     {
         // Vérifier le token CSRF
         if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
+            // Récupérer le post associé au commentaire
+            $forumPost = $comment->getForumPost();
+            // Décrémenter le compteur de commentaires du post
+            $forumPost->setCommentsCount($forumPost->getCommentsCount() - 1);
+            $entityManager->persist($forumPost); // Mettre à jour le post
+            $entityManager->flush();
             // Supprimer le commentaire
             $entityManager->remove($comment);
+            $entityManager->persist($forumPost); // Mettre à jour le post
             $entityManager->flush();
 
             $this->addFlash('success', 'Le commentaire a été supprimé avec succès.');
@@ -82,13 +113,17 @@ class AdminForumController extends AbstractController
             $comment->setCreatedAt(new \DateTime());
             $comment->setUpdatedAt(new \DateTime());
 
-                
+            // Incrémenter le compteur de commentaires du post
+            $forumPost->setCommentsCount($forumPost->getCommentsCount() + 1);
+            $entityManager->persist($forumPost); // Mettre à jour le post
+            $entityManager->flush();
             // Initialiser attachments si nécessaire
             if ($comment->getAttachments() === null) {
             $comment->setAttachments(''); // Ou une valeur par défaut
              }
 
             $entityManager->persist($comment);
+            $entityManager->persist($forumPost); // Mettre à jour le post
             $entityManager->flush();
 
             $this->addFlash('success', 'Le commentaire a été ajouté avec succès.');

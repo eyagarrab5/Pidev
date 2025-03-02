@@ -112,11 +112,11 @@
                 <i class="fas fa-edit"></i> 
             </a>
             <!-- Bouton Supprimer -->
-                <form action="{{ path('app_comments_delete', {'id': comment.id}) }}" method="post" class="form-delete">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                    <button type="submit" class="btn btn-delete">
-                        <i class="fas fa-trash"></i> 
-                    </button>
+               <form action="{{ path('app_comments_delete', {'id': comment.id}) }}" method="post" class="form-delete">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                    <button type="submit" class="btn btn-delete">
+                                        <i class="fas fa-trash"></i> 
+                                    </button>
                 </form>
             </div>
                             </li>
@@ -140,7 +140,13 @@
             <a href="{{ path('app_forum_posts_edit', {'id': forum_post.id}) }}" class="btn btn-warning">
                 <i class="fas fa-edit"></i> 
             </a>
-            {{ include('forum_posts/_delete_form.html.twig') }}
+             <!-- Formulaire de suppression du post -->
+            <form action="{{ path('app_forum_posts_delete', {'id': forum_post.id}) }}" method="post" style="display: inline;">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum_post.id) }}">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
         </div>
     </div>
 {% endblock %}

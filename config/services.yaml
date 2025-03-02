@@ -6,6 +6,9 @@
 parameters:
         uploads_directory: '%kernel.project_dir%/public/uploads'
 services:
+    app.sql_logger:
+        class: Doctrine\DBAL\Logging\DebugStack
+        
     App\Service\BadWordsFilter:
         arguments:
             $badWords: '%kernel.project_dir%/config/bad_words.txt'

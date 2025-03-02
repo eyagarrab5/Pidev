@@ -118,7 +118,8 @@ final class CommentsController extends AbstractController{
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_forum_posts_index', [], Response::HTTP_SEE_OTHER);
+        // Rediriger vers la page précédente ou une autre page
+    return $this->redirectToRoute('app_forum_posts_show', ['id' => $comment->getForumPost()->getId()]);
     }
     // Route pour incrémenter les likes
     #[Route('/forum/posts/{postId}/like', name: 'app_forum_posts_like', methods: ['POST'])]

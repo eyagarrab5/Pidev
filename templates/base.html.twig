@@ -75,16 +75,19 @@
       <a href="index.html" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="{{asset('assets/img/logo.png')}}" alt=""> -->
-        <h1 class="sitename">CovoiMob</h1>
+        <h1 class="text-decoration-none">CovoiMob</h1>
       </a>
 
       <nav id="navmenu" class="navmenu">
   <ul>
+    <li><a href="{{ path('app_forum_categories') }}" class="text-decoration-none">
+    Catégories
+</a></li>
     <!-- Lien vers la liste des posts du forum -->
-    <li><a href="{{ path('app_forum_posts_index') }}">Forum</a></li>
+    <li><a href="{{ path('app_forum_posts_index') }}" class="text-decoration-none"> Forum</a></li>
 
     <!-- Lien pour créer un nouveau post -->
-    <li><a href="{{ path('app_forum_posts_new') }}">Créer un post</a></li>
+    <li><a href="{{ path('app_forum_posts_new') }}" class="text-decoration-none">Créer un post</a></li>
 
 
     

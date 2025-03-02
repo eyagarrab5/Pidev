@@ -3,12 +3,15 @@
 namespace App\Form;
 
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\ForumPosts;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ForumPostsType extends AbstractType
 {
@@ -25,7 +28,26 @@ class ForumPostsType extends AbstractType
                 'label' => 'Nom',
                 'required' => true,
             ])*/
-            ->add('category')
+            ->add('category', ChoiceType::class, [
+                'label' => 'Catégorie',
+                'choices' => [
+                    'Covoiturage' => [
+                        'Expériences de covoiturage' => 'Expériences de covoiturage',
+                        'Budget & Partage des frais' => 'Budget & Partage des frais',
+                    ],
+                    'Véhicules' => [
+                        'Location de véhicules' => 'Location de véhicules',
+                        'Entretien & Sécurité' => 'Entretien & Sécurité',
+                    ],
+                    'Conseils' => [
+                        'Astuces & Conseils' => 'Astuces & Conseils',
+                    ],
+                ],
+                'placeholder' => 'Choisissez une catégorie',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+            ])
             ->add('tags')
             ->add('attachment', FileType::class, [
                 'label' => 'Pièces jointes (PDF, JPG, PNG)',
