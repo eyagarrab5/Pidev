@@ -165,7 +165,7 @@ class Vehicule
         return $this->disponibilite;
     }
 
-    public function setDisponibilite(?string $disponibilite): static
+    public function setDisponibilite(?string $disponibilite): self
     {
         $this->disponibilite = $disponibilite;
 
@@ -188,6 +188,19 @@ class Vehicule
     {
         return $this->reservationVehicule;
     }
+    #[ORM\Column(type: "boolean", options: ["default" => false])]
+    private bool $isPinned = false;
+    public function isPinned(): bool
+{
+    return $this->isPinned;
+}
+
+public function setIsPinned(bool $isPinned): self
+{
+    $this->isPinned = $isPinned;
+    return $this;
+}
+
     #[ORM\Column(length: 255, nullable: true)]
 private ?string $image = null;
 

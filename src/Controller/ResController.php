@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Vehicule;
 use App\Entity\ReservationVehicule;
 use App\Form\ReservationVehiculeType;
@@ -22,7 +23,7 @@ final class ResController extends AbstractController
             'reservation_vehicules' => $reservationVehiculeRepository->findAll(),
         ]);
     }
-    #[Route('/n1',name: 'app_res_index2', methods: ['GET'])]
+    #[Route('/n1', name: 'app_res_index2', methods: ['GET'])]
     public function index5(ReservationVehiculeRepository $reservationVehiculeRepository): Response
     {
         return $this->render('res/index2.html.twig', [
@@ -35,36 +36,35 @@ final class ResController extends AbstractController
     {
         // Find the vehicle by ID
         $vehicule = $entityManager->getRepository(Vehicule::class)->find($vehiculeId);
-    
+
         // If the vehicle is not found, throw a 404 error
         if (!$vehicule) {
             throw $this->createNotFoundException('Véhicule non trouvé.');
         }
-    
+
         // Create a new reservation and associate it with the vehicle
         $reservationVehicule = new ReservationVehicule();
         $reservationVehicule->setIdVehicule($vehicule); // Pass the Vehicule object, not the ID
-    
+
         // Create the form
         $form = $this->createForm(ReservationVehiculeType::class, $reservationVehicule);
         $form->handleRequest($request);
-    
+
         // Handle form submission
         if ($form->isSubmitted() && $form->isValid()) {
             // Save the reservation to the database
             $entityManager->persist($reservationVehicule);
             $entityManager->flush();
-    
+
             // Redirect to the reservation list page
             return $this->redirectToRoute('app_vehicule_index', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         // Render the form
         return $this->render('res/new.html.twig', [
             'reservation_vehicule' => $reservationVehicule,
             'form' => $form->createView(),
         ]);
-       
     }
 
 
@@ -138,29 +138,47 @@ final class ResController extends AbstractController
     #[Route('/{id}', name: 'app_res_delete', methods: ['POST'])]
     public function delete(Request $request, ReservationVehicule $reservationVehicule, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservationVehicule->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reservationVehicule->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reservationVehicule);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_res_index', [], Response::HTTP_SEE_OTHER);
     }
-    
 
-#[Route('/res/statistics', name: 'app_res_statistics', methods: ['GET'])]
-public function statistics(ReservationVehiculeRepository $reservationVehiculeRepository): Response
-{
-    // Récupérer les réservations groupées par date de début
-    $reservationsByDate = $reservationVehiculeRepository->createQueryBuilder('r')
-        ->select('r.date_debut as date, COUNT(r.id) as count')
-        ->groupBy('r.date_debut')
-        ->orderBy('r.date_debut', 'ASC')
-        ->getQuery()
-        ->getResult();
 
-    return $this->render('res/statistics.html.twig', [
-        'reservationsByDate' => $reservationsByDate,
-    ]);
-}
+    #[Route('/res/statistics', name: 'app_res_statistics', methods: ['GET'])]
+    public function statistics(ReservationVehiculeRepository $reservationVehiculeRepository): Response
+    {
+        // Récupérer les réservations groupées par date de début
+        $reservationsByDate = $reservationVehiculeRepository->createQueryBuilder('r')
+            ->select('r.date_debut as date, COUNT(r.id) as count')
+            ->groupBy('r.date_debut')
+            ->orderBy('r.date_debut', 'ASC')
+            ->getQuery()
+            ->getResult();
 
+        // Calculer les réservations pour aujourd'hui
+        $reservationsToday = $reservationVehiculeRepository->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.date_debut = :today')
+            ->setParameter('today', new \DateTime('today'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Calculer les réservations pour cette semaine
+        $reservationsThisWeek = $reservationVehiculeRepository->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.date_debut BETWEEN :startOfWeek AND :endOfWeek')
+            ->setParameter('startOfWeek', new \DateTime('monday this week'))
+            ->setParameter('endOfWeek', new \DateTime('sunday this week'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $this->render('res/statistics.html.twig', [
+            'reservationsByDate' => $reservationsByDate,
+            'reservationsToday' => $reservationsToday,
+            'reservationsThisWeek' => $reservationsThisWeek,
+        ]);
+    }
 }

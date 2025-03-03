@@ -22,26 +22,59 @@ use Dompdf\Dompdf;
 final class VehiculeController extends AbstractController
 {
     #[Route(name: 'app_vehicule_index', methods: ['GET'])]
-    public function index(VehiculeRepository $vehiculeRepository, Request $request, PaginatorInterface $paginator): Response
+public function index(VehiculeRepository $vehiculeRepository, Request $request, PaginatorInterface $paginator): Response
 {
-    // Créez une requête pour récupérer tous les véhicules
-    $query = $vehiculeRepository->createQueryBuilder('v')->getQuery();
+    // Récupérer le critère de tri depuis les paramètres de requête
+    $sortBy = $request->query->get('sort_by', 'id'); // Par défaut, tri par ID
+    $search = $request->query->get('search');
+    // Récupérer les véhicules épinglés
+    $pinnedVehicules = $vehiculeRepository->findPinnedPosts($search, $sortBy);
+    // Créer une requête de base
+// Créer une requête de base pour les autres véhicules
+$queryBuilder = $vehiculeRepository->createQueryBuilder('v')
+->where('v.isPinned = :isPinned')
+->setParameter('isPinned', false);
+if ($search) {
+        $queryBuilder->andWhere('v.modele LIKE :search OR v.typeVehicule LIKE :search OR v.role LIKE :search')
+            ->setParameter('search', '%' . $search . '%');
+    }
+    // Appliquer le filtre en fonction du critère de tri
+    switch ($sortBy) {
+        case 'disponibilite_matin':
+            $queryBuilder->andWhere('v.disponibilite = :disponibilite')
+                ->setParameter('disponibilite', 'matin');
+            break;
+        case 'disponibilite_nuit':
+            $queryBuilder->andWhere('v.disponibilite = :disponibilite')
+                ->setParameter('disponibilite', 'nuit');
+            break;
+        default:
+            // Par défaut, trier par ID
+            $queryBuilder->orderBy('v.id', 'ASC');
+            break;
+    }
 
-    // Paginez les résultats
+    // Paginer les résultats
     $vehicules = $paginator->paginate(
-        $query, // Requête à paginer
+        $queryBuilder->getQuery(), // Requête à paginer
         $request->query->getInt('page', 1), // Numéro de page par défaut
         6 // Nombre d'éléments par page
     );
+    if ($request->isXmlHttpRequest()) {
+        return $this->render('vehicule/index.html.twig', [
+            'vehicules' => $vehicules,
+            'pinnedVehicules' => $pinnedVehicules,
+        ]);
+    }
 
-    // Passez les résultats paginés au template
+
     return $this->render('vehicule/index.html.twig', [
-        'vehicules' => $vehicules, // Utilisez $vehicules (objet paginé) ici
+        'vehicules' => $vehicules,
+        'pinnedVehicules' => $pinnedVehicules,
+        'sort_by' => $sortBy,
     ]);
 }
-
-
-    #[Route('/back',name: 'backk', methods: ['GET'])]
+#[Route('/back',name: 'backk', methods: ['GET'])]
     public function ind3ex(VehiculeRepository $vehiculeRepository): Response
     {
         return $this->render('vehicule/inback.html.twig', [
@@ -162,5 +195,34 @@ public function generatePdf(Vehicule $vehicule): Response
     return $response;
 }
 
+#[Route('/vehicule/search', name: 'app_vehicule_search', methods: ['GET'])]
+public function search(Request $request, VehiculeRepository $vehiculeRepository): Response
+{
+    // Récupérer le terme de recherche depuis la requête
+    $query = $request->query->get('q', '');
+
+    // Rechercher les véhicules correspondants
+    $vehicules = $vehiculeRepository->search($query);
+
+    // Retourner la vue partielle avec les résultats
+    return $this->render('vehicule/_vehicules.html.twig', [
+        'vehicules' => $vehicules,
+    ]);
+}
+
+// src/Controller/VehiculeController.php
+
+#[Route('/vehicule/{id}/pin', name: 'app_vehicule_pin', methods: ['POST'])]
+public function pin(Vehicule $vehicule, EntityManagerInterface $entityManager): Response
+{
+    // Inverser l'état isPinned
+    $vehicule->setIsPinned(!$vehicule->isPinned());
+
+    // Enregistrer les modifications
+    $entityManager->flush();
+
+    // Rediriger vers la liste des véhicules
+    return $this->redirectToRoute('app_vehicule_index');
+}
     
 }

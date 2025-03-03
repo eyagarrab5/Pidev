@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class VehiculeType extends AbstractType
 {
@@ -36,8 +37,15 @@ class VehiculeType extends AbstractType
                 'label' => 'Prix par jour',
                 
             ])
-            ->add('disponibilite', TextType::class, [
+            ->add('disponibilite', ChoiceType::class, [
                 'label' => 'Disponibilité',
+                'choices' => [
+                    'Matin' => 'matin',
+                    'Nuit' => 'nuit',
+                    'Indisponible' => 'indisponible', // Option supplémentaire
+                ],
+                'placeholder' => 'Choisir une disponibilité', // Optionnel
+            
                
             ])
             ->add('lieu_retrait', TextType::class, [

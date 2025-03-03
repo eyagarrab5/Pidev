@@ -89,3 +89,7 @@ body {
     background-color: rgba(255, 255, 255, 0.1); /* Fond légèrement transparent */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre pour un effet en relief */
 }
+.btn-outline-primary {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
