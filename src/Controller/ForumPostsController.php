@@ -42,6 +42,14 @@ final class ForumPostsController extends AbstractController{
         $request->query->getInt('page', 1), // Numéro de page
         5 // Nombre d'éléments par page
     );
+
+     // Vérifier que les notifications sont bien des tableaux
+     foreach ($forumPosts as $forumPost) {
+        $notifications = $forumPost->getNotifications();
+        if (!is_array($notifications)) {
+            $forumPost->setNotifications([]); // Forcer à un tableau vide
+        }
+    }
     
         if ($request->isXmlHttpRequest()) {
             return $this->render('forum_posts/index.html.twig', [
@@ -69,6 +77,9 @@ final class ForumPostsController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Ajouter une notification
+        $forumPost->addNotification('Nouveau post créé : ' . $forumPost->getTitle());
+
             // Filtrer les "bad words" dans le titre et le contenu
             $forumPost->setTitle($this->badWordsFilter->filter($forumPost->getTitle()));
             $forumPost->setContent($this->badWordsFilter->filter($forumPost->getContent()));
@@ -118,6 +129,12 @@ final class ForumPostsController extends AbstractController{
     #[Route('/{id}', name: 'app_forum_posts_show', methods: ['GET'])]
     public function show(ForumPosts $forumPost, CommentsRepository $commentsRepository): Response
     {
+        // Vérifier que notifications est un tableau
+        $notifications = $forumPost->getNotifications();
+        if (!is_array($notifications)) {
+            $forumPost->setNotifications([]); // Forcer à un tableau vide
+        }
+
         // Récupérer les commentaires associés au post
         $comments = $commentsRepository->findBy(['forumPost' => $forumPost]);
 
@@ -130,6 +147,12 @@ final class ForumPostsController extends AbstractController{
     #[Route('/{id}/edit', name: 'app_forum_posts_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ForumPosts $forumPost, EntityManagerInterface $entityManager): Response
     {
+         // Vérifier que notifications est un tableau
+        $notifications = $forumPost->getNotifications();
+        if (!is_array($notifications)) {
+            $forumPost->setNotifications([]); // Forcer à un tableau vide
+        }
+        
         $form = $this->createForm(ForumPostsType::class, $forumPost);
         $form->handleRequest($request);
 
@@ -244,5 +267,16 @@ final class ForumPostsController extends AbstractController{
             'category' => $category,
         ]);
     }
+    #[Route('/{id}/clear-notifications', name: 'app_forum_posts_clear_notifications', methods: ['POST'])]
+    public function clearNotifications(ForumPosts $forumPost, EntityManagerInterface $entityManager): Response
+    {
+        $forumPost->clearNotifications();
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Les notifications ont été effacées.');
+        return $this->redirectToRoute('app_admin_forum_posts');
+    }
+
+    
 
 }

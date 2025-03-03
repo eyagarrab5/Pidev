@@ -38,6 +38,9 @@ final class CommentsController extends AbstractController{
     // Créer un nouveau commentaire
     $comment = new Comments();
     $comment->setForumPost($forumPost); // Associer le commentaire au post
+    // Ajouter une notification
+    $forumPost->addNotification('Nouveau commentaire sur le post : ' . $forumPost->getTitle());
+
     // Créer le formulaire
     $form = $this->createForm(CommentsType::class, $comment);
     $form->handleRequest($request);

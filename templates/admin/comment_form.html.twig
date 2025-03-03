@@ -8,6 +8,12 @@
 
         <div class="card">
             <div class="card-body">
+              <!-- Colonne de gauche pour l'image -->
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img src="{{ asset('img/pic4.jpg') }}" alt="Image du forum" class="img-fluid rounded mb-4" style="max-width: 100%; height: auto;">
+                </div>
+            </div>
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
                 <div class="mb-3">
                     {{ form_label(form.content, 'Contenu du commentaire', {'label_attr': {'class': 'form-label'}}) }}
@@ -15,21 +21,9 @@
                     {{ form_errors(form.content) }}
                 </div>
 
-                <div class="mb-3">
-                    {{ form_label(form.tags, 'Tags', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.tags, {'attr': {'class': 'form-control', 'placeholder': 'Ajoutez des tags (séparés par des virgules)'}}) }}
-                    {{ form_errors(form.tags) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_label(form.attachments, 'Pièces jointes', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.attachments, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.attachments) }}
-                </div>
-
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Ajouter le commentaire
+                        <i class="fas fa-paper-plane"></i>Commenter
                     </button>
                 </div>
                 {{ form_end(form) }}
@@ -38,7 +32,7 @@
 
         <div class="mt-4">
             <a href="{{ path('app_admin_forum_posts') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Retour à la liste des posts
+                <i class="fas fa-arrow-left"></i>
             </a>
         </div>
     </div>

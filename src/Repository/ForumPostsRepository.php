@@ -92,34 +92,34 @@ class ForumPostsRepository extends ServiceEntityRepository
     }
 
     public function findBySort(string $sort): array
-{
-    $queryBuilder = $this->createQueryBuilder('fp')
-        ->leftJoin('fp.comments', 'c')
-        ->addSelect('c');
+    {
+        $queryBuilder = $this->createQueryBuilder('fp')
+            ->leftJoin('fp.comments', 'c')
+            ->addSelect('c');
 
-    // Appliquer le tri en fonction du paramètre
-    switch ($sort) {
-        case 'newest':
-            $queryBuilder->orderBy('fp.createdAt', 'DESC');
-            break;
-        case 'oldest':
-            $queryBuilder->orderBy('fp.createdAt', 'ASC');
-            break;
-        case 'most_liked':
-            $queryBuilder->orderBy('fp.likes', 'DESC');
-            break;
-        case 'least_liked':
-            $queryBuilder->orderBy('fp.likes', 'ASC');
-            break;
-        default:
-            $queryBuilder->orderBy('fp.createdAt', 'DESC');
-            break;
+        // Appliquer le tri en fonction du paramètre
+        switch ($sort) {
+            case 'newest':
+                $queryBuilder->orderBy('fp.createdAt', 'DESC');
+                break;
+            case 'oldest':
+                $queryBuilder->orderBy('fp.createdAt', 'ASC');
+                break;
+            case 'most_liked':
+                $queryBuilder->orderBy('fp.likes', 'DESC');
+                break;
+            case 'least_liked':
+                $queryBuilder->orderBy('fp.likes', 'ASC');
+                break;
+            default:
+                $queryBuilder->orderBy('fp.createdAt', 'DESC');
+                break;
+        }
+        // Log la requête SQL générée
+        $sql = $queryBuilder->getQuery()->getSQL();
+        dump($sql);
+        return $queryBuilder->getQuery()->getResult();
     }
-    // Log la requête SQL générée
-    $sql = $queryBuilder->getQuery()->getSQL();
-    dump($sql);
-    return $queryBuilder->getQuery()->getResult();
-}
 
     public function findAllWithComments(): array
     {
@@ -130,7 +130,37 @@ class ForumPostsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findAllWithCommentsQuery(?string $search, string $sort): Query
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.comments', 'c')
+            ->addSelect('c');
 
+        if ($search) {
+            $queryBuilder->andWhere('p.title LIKE :search OR p.content LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        switch ($sort) {
+            case 'newest':
+                $queryBuilder->orderBy('p.createdAt', 'DESC');
+                break;
+            case 'oldest':
+                $queryBuilder->orderBy('p.createdAt', 'ASC');
+                break;
+            case 'most_liked':
+                $queryBuilder->orderBy('p.likes', 'DESC');
+                break;
+            case 'least_liked':
+                $queryBuilder->orderBy('p.likes', 'ASC');
+                break;
+            default:
+                $queryBuilder->orderBy('p.createdAt', 'DESC');
+                break;
+        }
+
+        return $queryBuilder->getQuery();
+    }
     public function findByCategory(string $category): array
     {
         return $this->createQueryBuilder('fp')
@@ -180,6 +210,9 @@ class ForumPostsRepository extends ServiceEntityRepository
 
     return $queryBuilder->getQuery()->getResult();
 }
+
+
+
 //    /**
 //     * @return ForumPosts[] Returns an array of ForumPosts objects
 //     */

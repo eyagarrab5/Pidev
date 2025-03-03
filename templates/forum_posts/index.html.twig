@@ -267,11 +267,13 @@
                 </div>
             {% endfor %}
         </div>
-        <!-- Pagination -->
-        <div class="navigation">
-            {{ knp_pagination_render(forum_posts) }}
-        </div>
-    </div>
+
+
+
+<!-- Pagination for forum posts -->
+<div class="navigation">
+    {{ knp_pagination_render(forum_posts) }}
+</div>
    {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

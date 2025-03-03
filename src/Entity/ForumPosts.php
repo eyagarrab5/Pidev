@@ -71,11 +71,19 @@ class ForumPosts
     #[ORM\Column(type: "boolean", options: ["default" => false])]
     private bool $isPinned = false;
 
+    #[ORM\Column(type: 'json')]
+    private array $notifications = [];
+
+    #[ORM\Column(type: 'json')]
+    private array $favoritedBy = [];
+
 
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->notifications = [];
+        $this->favoritedBy = [];
     }
 
 
@@ -258,6 +266,49 @@ class ForumPosts
     {
         $this->isPinned = $isPinned;
         return $this;
+    }
+
+    public function getNotifications(): array
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(string $message): self
+    {
+        $this->notifications[] = [
+            'message' => $message,
+            'createdAt' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
+        return $this;
+    }
+
+    public function clearNotifications(): self
+    {
+        $this->notifications = [];
+        return $this;
+    }
+
+    public function getFavoritedBy(): array
+    {
+        return $this->favoritedBy;
+    }
+
+    public function addFavoritedBy(int $userId): self
+    {
+        if (!in_array($userId, $this->favoritedBy, true)) {
+            $this->favoritedBy[] = $userId;
+        }
+    }
+
+    public function removeFavoritedBy(int $userId): self
+    {
+        $this->favoritedBy = array_filter($this->favoritedBy, fn ($id) => $id !== $userId);
+        return $this;
+    }
+
+    public function isFavoritedBy(int $userId): bool
+    {
+        return in_array($userId, $this->favoritedBy, true);
     }
 
     

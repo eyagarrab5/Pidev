@@ -12,12 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/admin/forum')]
 class AdminForumController extends AbstractController
 {
     #[Route('/posts', name: 'app_admin_forum_posts')]
-    public function posts(Request $request, ForumPostsRepository $forumPostsRepository): Response
+    public function posts(Request $request, ForumPostsRepository $forumPostsRepository, PaginatorInterface $paginator): Response
     {
         $sort = $request->query->get('sort', 'newest');
         $search = $request->query->get('search'); 
@@ -27,7 +28,16 @@ class AdminForumController extends AbstractController
 
         // Récupérer tous les posts avec leurs commentaires
         $forumPosts = $forumPostsRepository->findAllWithComments();
-        
+        $query = $forumPostsRepository->findAllWithCommentsQuery($search, $sort);
+
+         // Paginer les résultats
+         $forumPosts = $paginator->paginate(
+            $query, // Requête à paginer
+            $request->query->getInt('page', 1), // Numéro de page
+            5 // Nombre d'éléments par page
+        );
+
+
         // Récupérer les statistiques
         $totalPosts = $forumPostsRepository->getTotalPosts();
         $totalComments = $forumPostsRepository->getTotalComments();
