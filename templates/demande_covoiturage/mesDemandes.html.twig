@@ -19,8 +19,13 @@
                                 <strong>Budget:</strong> {{ demande_covoiturage.budget }} dt<br>
                             </p>
                             <div class="d-flex justify-content-between">
+                            <!-- Ajout de l'icône PDF -->
+                                <a href="{{ path('app_demande_pdf', {'id': demande_covoiturage.id}) }}" 
+                                   style="background-color:white; color: #ff0000; padding: 1px; margin-left: 250px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                                   <i class="fas fa-file-pdf"></i>
+                                </a>
                               <a href="{{ path('app_demande_covoiturage_edit', {'id': demande_covoiturage.id}) }}"
-                                 style="background-color:white; color: #223366; padding: 1px; margin-left: 282px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                                 style="background-color:white; color: #223366; padding: 1px; border-radius: 4px; text-decoration: none; display: inline-block;">
                                  <i class="fas fa-edit"></i>
                               </a>
 

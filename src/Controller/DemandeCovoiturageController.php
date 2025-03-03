@@ -10,6 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 #[Route('/demande/covoiturage')]
 final class DemandeCovoiturageController extends AbstractController
@@ -103,5 +106,29 @@ public function indexAdmin(DemandeCovoiturageRepository $demandeCovoiturageRepos
     
         return $this->redirectToRoute('app_demande_covoiturage_index_Admin', [], Response::HTTP_SEE_OTHER);
     }
-   
+    
+    #[Route('/demande/{id}/pdf', name: 'app_demande_pdf')]
+    public function generatePdf(DemandeCovoiturage $demande): Response
+    {
+        // Configuration de DomPDF
+        $dompdf = new Dompdf();
+        
+        // Génération du HTML
+        $html = $this->renderView('demande_covoiturage/pdf_template.html.twig', [
+            'demande' => $demande
+        ]);
+    
+        // Conversion en PDF
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+    
+        // Création de la réponse
+        $response = new Response($dompdf->output());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment; filename="demande_covoiturage_'.$demande->getId().'.pdf"');
+    
+        return $response;
+    }
+    
 }

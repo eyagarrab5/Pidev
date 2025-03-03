@@ -10,6 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 
 #[Route('/offre/covoiturage')]
 final class OffreCovoiturageController extends AbstractController
@@ -37,26 +44,95 @@ final class OffreCovoiturageController extends AbstractController
     }
 
     #[Route('/new', name: 'app_offre_covoiturage_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $offreCovoiturage = new OffreCovoiturage();
-        $offreCovoiturage->setConducteurId(123);
-        $offreCovoiturage->setStatut(StatutOffre::EN_ATTENTE);
-        $form = $this->createForm(OffreCovoiturageType::class, $offreCovoiturage);
-        $form->handleRequest($request);
+public function new(
+    Request $request, 
+    EntityManagerInterface $entityManager,
+    SluggerInterface $slugger,
+    #[Autowire('%kernel.project_dir%/public/uploads/brochures')] string $brochuresDirectory,
+    #[Autowire('%env(FACEBOOK_PAGE_ID)%')] string $facebookPageId,
+    #[Autowire('%env(FACEBOOK_ACCESS_TOKEN)%')] string $accessToken
+): Response
+{
+    $offreCovoiturage = new OffreCovoiturage();
+    $offreCovoiturage->setConducteurId(123);
+    $offreCovoiturage->setStatut(StatutOffre::EN_ATTENTE);
+    $form = $this->createForm(OffreCovoiturageType::class, $offreCovoiturage);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($offreCovoiturage);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Handle file upload
+        $brochureFile = $form->get('brochure')->getData();
 
-            return $this->redirectToRoute('app_offre_covoiturage_index', [], Response::HTTP_SEE_OTHER);
+        if ($brochureFile) {
+            $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+
+            try {
+                $brochureFile->move(
+                    $this->getParameter('upload_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                $this->addFlash('error', 'An error occurred while uploading the file.');
+                return $this->redirectToRoute('app_offre_covoiturage_new');
+            }
+
+            $offreCovoiturage->setImg($newFilename);
         }
 
-        return $this->render('offre_covoiturage/new.html.twig', [
-            'offre_covoiturage' => $offreCovoiturage,
-            'form' => $form,
-        ]);
+        // Save the entity to the database
+        $entityManager->persist($offreCovoiturage);
+        $entityManager->flush();
+
+        // Partager sur Facebook
+        try {
+            $client = HttpClient::create();
+            
+            $postMessage = sprintf(
+                "🚗 Nouvelle offre de covoiturage disponible !\n\n".
+                "📍 Départ : %s\n".
+                "🏁 Destination : %s\n".
+                "📅 Date : %s\n".
+                "💵 Prix : %s DT\n".
+                " Matricule : %s\n",
+
+                $offreCovoiturage->getDepart(),
+                $offreCovoiturage->getDestination(),
+                $offreCovoiturage->getDate()->format('Y-m-d H:i'),
+                $offreCovoiturage->getPrix(),
+                $offreCovoiturage->getMatVehicule()
+            );
+
+            $response = $client->request('POST', "https://graph.facebook.com/v22.0/{$facebookPageId}/feed", [
+                'query' => [
+                    'message' => $postMessage,
+                    'access_token' => $accessToken
+                ]
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            $content = $response->toArray();
+
+            if ($statusCode !== 200 || isset($content['error'])) {
+                $this->addFlash('warning', 'L\'offre de covoiturage a été créée mais le partage Facebook a échoué');
+            } else {
+                $this->addFlash('success', 'L\'offre de covoiturage a été créée et partagée sur Facebook !');
+            }
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors du partage Facebook : '.$e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_offre_covoiturage_index', [], Response::HTTP_SEE_OTHER);
+       
+
     }
+
+    return $this->render('offre_covoiturage/new.html.twig', [
+        'offre_covoiturage' => $offreCovoiturage,
+        'form' => $form,
+    ]);
+}
 
     #[Route('/{id}', name: 'app_offre_covoiturage_show', methods: ['GET'])]
     public function show(OffreCovoiturage $offreCovoiturage): Response

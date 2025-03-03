@@ -25,16 +25,18 @@
                         <div class="card-body">
                             <h5 class="card-title">Mohammed 2</h5>
                             <h6 class="card-subtitle mb-2 text-muted">De {{ offre_covoiturage.depart }} à {{ offre_covoiturage.destination }}</h6>
-                            <p>
-                                <i class="fas fa-car" style="color: #007bff;"></i>
-                                <strong>Matricule:</strong> {{ offre_covoiturage.matVehicule }}<br>
-                                <i class="fas fa-users" style="color: #17a2b8;"></i>
-                                <strong>Places Disponibles:</strong> {{ offre_covoiturage.placesDispo }}<br>
-                                <i class="fas fa-calendar-alt" style="color: #007bff;"></i>
-                                <strong>Date:</strong> {{ offre_covoiturage.date ? offre_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}<br>
-                                <i class="fas fa-wallet" style="color: #28a745;"></i>
-                                <strong>Prix:</strong> {{ offre_covoiturage.prix }} dt<br>
-                            </p>
+                          <p>
+    <i class="fas fa-car" style="color: #007bff;"></i>
+    <strong>Matricule:</strong> {{ offre_covoiturage.matVehicule }}<br>
+    <i class="fas fa-users" style="color: #17a2b8;"></i>
+    <strong>Places Disponibles:</strong> {{ offre_covoiturage.placesDispo }}<br>
+    <i class="fas fa-calendar-alt" style="color: #007bff;"></i>
+    <strong>Date:</strong> {{ offre_covoiturage.date ? offre_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}<br>
+    <i class="fas fa-wallet" style="color: #28a745;"></i>
+    <strong>Prix:</strong> {{ offre_covoiturage.prix }} dt<br>
+    <img src="{{ asset('uploads/' ~ offre_covoiturage.img) }}" 
+         class="covoiturage-image">
+</p>
                             <div class="d-flex justify-content-between">
                                 <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ offre_covoiturage.id }}">
                                     Réserver
@@ -170,6 +172,12 @@
 
 .btn-favorite:focus {
     outline: none;
+}
+.covoiturage-image {
+    width: 339px;
+    height: 277px;
+    border-radius: 8px;
+    margin-top: 10px;
 }
 
 </style>

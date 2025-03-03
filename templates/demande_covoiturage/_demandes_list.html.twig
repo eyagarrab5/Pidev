@@ -1,0 +1,31 @@
+{# templates/demande_covoiturage/_demandes_list.html.twig #}
+{% for demande_covoiturage in demande_covoiturages %}
+    <div class="col-md-4 mb-4 demand-card">
+        <div class="card border-light rounded-lg">
+            <div class="card-body bg-lightblue">
+                <h5 class="card-title">Mohammed 2</h5>
+                <h6 class="card-subtitle">
+                    <i class="fas fa-map-marker-alt"></i> De {{ demande_covoiturage.depart }} à {{ demande_covoiturage.destination }}
+                </h6>
+                <p class="card-text">
+                    <i class="fas fa-calendar-alt text-primary"></i>
+                    <strong>Date:</strong> {{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}<br>
+                    <i class="fas fa-wallet text-info"></i>
+                    <strong>Budget:</strong> {{ demande_covoiturage.budget }} dt<br>
+                </p>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ demande_covoiturage.id }}">
+                       Proposer
+                    </button>
+                    <button class="btn-favorite">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="col-12 text-center">
+        <p class="text-danger">Aucune Demande trouvée.</p>
+    </div>
+{% endfor %}

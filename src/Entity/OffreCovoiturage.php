@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: OffreCovoiturageRepository::class)]
 class OffreCovoiturage
@@ -70,6 +71,9 @@ private ?int $matVehicule = null;
     #[Assert\NotBlank(message: "Le prix est obligatoire.")]
     #[Assert\Positive(message: "Le prix doit être positif.")]
     private ?float $prix = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $img = null;
 
     public function __construct()
     {
@@ -245,6 +249,18 @@ private ?int $matVehicule = null;
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getImg(): ?string
+    {
+        return $this->img;
+    }
+
+    public function setImg(?string $img): static
+    {
+        $this->img = $img;
 
         return $this;
     }

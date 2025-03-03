@@ -1,0 +1,58 @@
+<div class="row" id="demandes-container">
+    {% for demande_covoiturage in demande_covoiturages %}
+    <div class="col-md-4 mb-4 demand-card" style="display: {% if loop.index > 6 %}none{% endif %};">
+        <div class="card border-light rounded-lg">
+            <div class="card-body bg-lightblue">
+                <h5 class="card-title">Mohammed 2</h5>
+                <h6 class="card-subtitle">
+                    <i class="fas fa-map-marker-alt"></i> 
+                    De {{ demande_covoiturage.depart }} à {{ demande_covoiturage.destination }}
+                </h6>
+                <p class="card-text">
+                    <i class="fas fa-calendar-alt text-primary"></i>
+                    <strong>Date:</strong> {{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}<br>
+                    <i class="fas fa-wallet text-info"></i>
+                    <strong>Budget:</strong> {{ demande_covoiturage.budget }} dt<br>
+                </p>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-custom" data-bs-toggle="modal" 
+                            data-bs-target="#confirmationModal{{ demande_covoiturage.id }}">
+                        Proposer
+                    </button>
+                    <button class="btn-favorite">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale de confirmation -->
+        <div class="modal fade" id="confirmationModal{{ demande_covoiturage.id }}" tabindex="-1" 
+             aria-labelledby="confirmationModalLabel{{ demande_covoiturage.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel{{ demande_covoiturage.id }}">Confirmer la proposition</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="{{ asset('img/pic8.jpg') }}" alt="Image de confirmation" 
+                             class="img-fluid mb-3" style="border-radius: 8px; width: 200px; display: block; margin: 0 auto;">
+                        Êtes-vous sûr de vouloir proposer ce trajet de {{ demande_covoiturage.depart }} à 
+                        {{ demande_covoiturage.destination }} le {{ demande_covoiturage.date|date('Y-m-d H:i:s') }} ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <a href="{{ path('app_proposition_covoiturage_new', {'id': demande_covoiturage.id}) }}" 
+                           class="btn btn-primary">Confirmer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center">
+        <p class="text-danger">Aucune Demande trouvée pour "{{ term }}"</p>
+    </div>
+    {% endfor %}
+</div>

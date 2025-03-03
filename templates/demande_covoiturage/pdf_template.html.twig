@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Demande de Covoiturage #{{ demande.id }}</title>
+</head>
+<body>
+    <h1>Demande de Covoiturage</h1>
+    <p>Départ: {{ demande.depart }}</p>
+    <p>Destination: {{ demande.destination }}</p>
+    <p>Date: {{ demande.date|date('d/m/Y H:i') }}</p>
+    <p>Budget: {{ demande.budget }} DT</p>
+</body>
+</html>
