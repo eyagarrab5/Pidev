@@ -16,16 +16,75 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 
 
 #[Route('/offre/covoiturage')]
 final class OffreCovoiturageController extends AbstractController
 {
+
+    
     #[Route(name: 'app_offre_covoiturage_index', methods: ['GET'])]
-    public function index(OffreCovoiturageRepository $offreCovoiturageRepository): Response
-    {
+    public function index(
+        Request $request,
+        OffreCovoiturageRepository $offreCovoiturageRepository,
+        PaginatorInterface $paginator
+    ): Response {
+        $queryBuilder = $offreCovoiturageRepository->createQueryBuilder('o');
+    
+        // Gestion de la recherche
+        $searchTerm = $request->query->get('search');
+        if ($searchTerm) {
+            $queryBuilder
+                ->andWhere('o.depart LIKE :search OR o.destination LIKE :search')
+                ->setParameter('search', '%'.$searchTerm.'%');
+        }
+    
+        // Filtre par date
+        $dateFilter = $request->query->get('date');
+        if ($dateFilter) {
+            $startDate = new \DateTimeImmutable($dateFilter);
+            $startOfDay = $startDate->setTime(0, 0, 0);
+            $endOfDay = $startDate->setTime(23, 59, 59);
+    
+            $queryBuilder
+                ->andWhere('o.date BETWEEN :start AND :end')
+                ->setParameter('start', $startOfDay)
+                ->setParameter('end', $endOfDay);
+        }
+    
+        // Tri
+        $sortField = $request->query->get('sort_by', 'o.date');
+        $sortDirection = $request->query->get('sort_order', 'DESC');
+    
+        $allowedSorts = [
+            'prix' => 'o.prix',
+            'placesDispo' => 'o.placesDispo',
+            'date' => 'o.date'
+        ];
+    
+        if (array_key_exists($sortField, $allowedSorts)) {
+            $queryBuilder->orderBy($allowedSorts[$sortField], $sortDirection);
+        }
+    
+        // Pagination
+        $pagination = $paginator->paginate(
+            $queryBuilder->getQuery(),
+            $request->query->getInt('page', 1),
+            6,
+            [
+                'wrap-queries' => true,
+                'sortFieldAllowList' => array_keys($allowedSorts)
+            ]
+        );
+    
         return $this->render('offre_covoiturage/index.html.twig', [
-            'offre_covoiturages' => $offreCovoiturageRepository->findAll(),
+            'pagination' => $pagination,
+            'current_sort' => [
+                'field' => $sortField,
+                'direction' => $sortDirection
+            ]
         ]);
     }
     #[Route('/admin/offres', name: 'app_offre_covoiturage_index_Admin', methods: ['GET'])]
