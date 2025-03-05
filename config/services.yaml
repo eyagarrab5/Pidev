@@ -1,7 +1,8 @@
 # config/services.yaml
 parameters:
     upload_directory: '%kernel.project_dir%/public/uploads/'
-
+    vehicule_images_directory: '%kernel.project_dir%/public/uploads/vehicules'
+    
 services:
     _defaults:
         autowire: true

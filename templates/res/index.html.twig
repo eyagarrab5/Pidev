@@ -1,0 +1,133 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Gestion des Réservations{% endblock %}
+
+{% block body %}
+<style>
+    /* Conteneur des notifications */
+    .notification-container {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    /* Style de chaque notification */
+    .notification {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 10px;
+        width: 300px;
+        position: relative;
+        animation: slideIn 0.5s ease-out;
+    }
+
+    /* Bouton de fermeture */
+    .notification .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #888;
+    }
+
+    .notification .close-btn:hover {
+        color: #333;
+    }
+
+    /* Animation pour l'apparition des notifications */
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+   </style> 
+    <div class="container mt-4">
+        <h1 class="text-center text-primary mb-4">Gestion des Réservations</h1>
+        
+         <!-- Section des notifications -->
+   <div class="notification-container">
+    {% for reservation_vehicule in reservation_vehicules %}
+        {% for notification in reservation_vehicule.notifications %}
+            <div class="notification" data-notification-id="{{ loop.index }}">
+                <span>{{ notification.message }}</span>
+                <button class="btn-close close-btn" aria-label="Close" onclick="removeNotification(this)"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark bg-primary text-white">
+                <tr>
+                    <th>ID</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Prix Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation_vehicule in reservation_vehicules %}
+                    <tr>
+                        <td>{{ reservation_vehicule.id }}</td>
+                        <td>{{ reservation_vehicule.dateDebut ? reservation_vehicule.dateDebut|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ reservation_vehicule.dateFin ? reservation_vehicule.dateFin|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ reservation_vehicule.prixTotal }} TND</td>
+                        <td>
+                            <span class="badge {% if reservation_vehicule.status == 'Confirmée' %}bg-success{% elseif reservation_vehicule.status == 'En attente' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                {{ reservation_vehicule.status }}
+                            </span>
+                        </td>
+                        <td class="d-flex">
+                            <a href="{{ path('app_res_show', {'id': reservation_vehicule.id}) }}" class="btn btn-info btn-sm me-2">
+                                <i class="fas fa-eye"></i> 
+                            </a>
+                            <a href="{{ path('app_res_edit', {'id': reservation_vehicule.id}) }}" class="btn btn-warning btn-sm me-2">
+                                <i class="fas fa-edit"></i> 
+                            </a>
+                            <form method="post" action="{{ path('app_res_delete', {'id': reservation_vehicule.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation_vehicule.id) }}">
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> 
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Aucune réservation trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% block javascripts %}
+        <script>
+            function removeNotification(button) {
+            let notification = button.closest('.notification');
+            if (notification) {
+                notification.style.animation = "fadeOut 0.5s";
+                setTimeout(() => notification.remove(), 500);
+            }
+        }
+
+        document.head.insertAdjacentHTML("beforeend", `
+            <style>
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateX(0); }
+                    to { opacity: 0; transform: translateX(100%); }
+                }
+            </style>
+        `);
+        </script>
+    {% endblock %}
+{% endblock %}

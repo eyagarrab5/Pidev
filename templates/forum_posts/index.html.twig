@@ -1,0 +1,369 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forum{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            padding: 15px;
+        }
+
+        .btn-outline-primary, .btn-outline-success {
+            margin-right: 10px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .btn-outline-primary:hover, .btn-outline-success:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .badge {
+            font-size: 0.9em;
+            padding: 0.5em 0.75em;
+        }
+
+        .collapse {
+            transition: height 0.3s ease;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 10px 0;
+        }
+
+        .text-muted {
+            font-size: 0.9em;
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Styles pour le bouton "Voir" */
+        .btn-info.btn-sm {
+            background-color: transparent; /* Fond transparent */
+            border-color: #17a2b8; /* Bordure bleue */
+            color: #17a2b8; /* Texte bleu */
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .btn-info.btn-sm:hover {
+            background-color: #17a2b8; /* Fond bleu au survol */
+            color: white; /* Texte blanc au survol */
+        }
+
+        /* Styles pour le bouton "Modifier" */
+        .btn-warning.btn-sm {
+            background-color: transparent; /* Fond transparent */
+            border-color: #ffc107; /* Bordure jaune */
+            color: #ffc107; /* Texte jaune */
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .btn-warning.btn-sm:hover {
+            background-color: #ffc107; /* Fond jaune au survol */
+            color: black; /* Texte noir au survol */
+        }
+        /* Espacement personnalisé entre les boutons et les badges */
+        /* Espacement personnalisé entre les boutons et les badges */
+        /* Espacement personnalisé entre les boutons et les badges */
+        .custom-gap {
+            gap: 1px; /* Espace de 4px entre les éléments */
+        }
+        body {
+            background-image: url('{{ asset('img/pic5.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <div class="container">
+        <div class="text-center">
+                    <img src="{{ asset('img/gif2.gif') }}" alt="Image du forum" class="img-fluid rounded mb-4" style="max-width: 30%; height: auto;">
+        </div>
+        <h1 class="text-center my-4">Forum</h1>
+            <!-- Afficher le nom de la catégorie si applicable -->
+            {% if selected_category is defined and selected_category %}
+                <h2 class="text-center mb-4">Catégorie : {{ selected_category }}</h2>
+            {% endif %}
+
+        <!-- Formulaire de recherche et de tri -->
+        <div class="row mb-4">
+            <!-- Formulaire de recherche -->
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un post..." value="{{ app.request.query.get('search') }}">
+            </div>
+            <div class="col-md-6">
+                <form action="{{ path('app_forum_posts_index') }}" method="get" class="d-flex">
+                    <select name="sort" class="form-select me-2" onchange="this.form.submit()">
+                        <option value="newest" {% if app.request.query.get('sort') == 'newest' %}selected{% endif %}>Plus récent</option>
+                        <option value="oldest" {% if app.request.query.get('sort') == 'oldest' %}selected{% endif %}>Plus ancien</option>
+                        <option value="most_liked" {% if app.request.query.get('sort') == 'most_liked' %}selected{% endif %}>Plus aimés</option>
+                        <option value="least_liked" {% if app.request.query.get('sort') == 'least_liked' %}selected{% endif %}>Moins aimés</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bouton pour créer un nouveau post -->
+        <div class="text-end mb-4">
+            <a href="{{ path('app_forum_posts_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Créer un nouveau post
+            </a>
+        </div>
+
+        <!-- Liste des Posts -->
+        <div id="postsContainer">
+            {% for forum_post in forum_posts %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ forum_post.title }}</h5>
+                        <!-- Ajoutez ici l'indicateur "Épinglé" -->
+                        {% if forum_post.isPinned %}
+                            <span class="badge bg-warning"><i class="fas fa-thumbtack"></i> Épinglé</span>
+                        {% endif %}
+                        <p class="card-text">{{ forum_post.content }}</p>
+                        <p class="text-muted small">
+                            Posté par : {{ forum_post.user.firstName }} {{ forum_post.user.lastName }}
+                            le {{ forum_post.createdAt|date('d/m/Y H:i') }}
+                            {% if forum_post.updatedAt %}
+                                | Dernière modification le {{ forum_post.updatedAt|date('d/m/Y H:i') }}
+                            {% endif %}
+                        </p>
+                        {% if forum_post.attachment %}
+                            {% if forum_post.attachment matches '/\\.(jpg|jpeg|png|gif)$/i' %}
+                                <img src="{{ asset('uploads/' ~ forum_post.attachment) }}" alt="Image jointe" class="img-fluid">
+                            {% else %}
+                                <a href="{{ asset('uploads/' ~ forum_post.attachment) }}" target="_blank">Télécharger le fichier</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                   <!-- Boutons Like, Dislike, Likes, Dislikes et Commentaires -->
+<!-- Boutons Like, Dislike, Likes, Dislikes et Commentaires -->
+<!-- Boutons Like, Dislike, Likes, Dislikes et Commentaires -->
+<div class="card-footer bg-transparent">
+    <!-- Afficher les tags en bleu et en gras -->
+    {% if forum_post.tags %}
+        <div class="mb-2">
+            {% for tag in forum_post.tags|split(',') %}
+                <span class="badge bg-primary fw-bold">{{ tag }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Conteneur pour les boutons "J'aime" et "Je n'aime pas" -->
+        <div class="d-flex align-items-center custom-gap">
+            <!-- Bouton J'aime -->
+            <form action="{{ path('app_forum_posts_like', {'id': forum_post.id}) }}" method="POST" class="like-form">
+        <input type="hidden" name="_token" value="{{ csrf_token('like' ~ forum_post.id) }}">
+        <button type="submit" class="btn btn-outline-primary btn-sm like-btn" data-post-id="{{ forum_post.id }}">
+            <i class="fas fa-thumbs-up"></i> J'aime
+        </button>
+    </form>
+
+            <!-- Bouton Je n'aime pas -->
+            <form action="{{ path('app_forum_posts_dislike', {'id': forum_post.id}) }}" method="POST" class="dislike-form">
+        <input type="hidden" name="_token" value="{{ csrf_token('dislike' ~ forum_post.id) }}">
+        <button type="submit" class="btn btn-outline-danger btn-sm dislike-btn" data-post-id="{{ forum_post.id }}">
+            <i class="fas fa-thumbs-down"></i> Je n'aime pas
+        </button>
+    </form>
+        </div>
+
+        <!-- Conteneur pour les compteurs "Likes" et "Dislikes" au centre -->
+        <div class="d-flex align-items-center custom-gap">
+            <span class="badge bg-secondary" id="likes-count-{{ forum_post.id }}">{{ forum_post.likes ?? 0 }} Likes</span>
+            <span class="badge bg-secondary" id="dislikes-count-{{ forum_post.id }}">{{ forum_post.dislikes ?? 0 }} Dislikes</span>
+        </div>
+
+        <!-- Bouton Commentaires -->
+        <button class="btn btn-outline-success btn-sm" data-bs-toggle="collapse" data-bs-target="#comments-{{ forum_post.id }}">
+            <i class="fas fa-comment"></i> Commentaires
+        </button>
+    </div>
+</div>
+
+                    <!-- Section des Commentaires (masquée par défaut) -->
+                    <div id="comments-{{ forum_post.id }}" class="collapse">
+                        <div class="card-body">
+                            <h6>Commentaires :</h6>
+                            {% if forum_post.comments|length > 0 %}
+                                <ul class="list-group list-group-flush">
+                                    {% for comment in forum_post.comments %}
+                                        <li class="list-group-item">
+                                            <p>{{ comment.content }}</p>
+                                            <small class="text-muted">
+                                                Posté par : {{ comment.user.firstName }} {{ comment.user.lastName }}
+                                                le {{ comment.createdAt|date('d/m/Y H:i') }}
+                                                {% if comment.updatedAt %}
+                                                    | Modifié le {{ comment.updatedAt|date('d/m/Y H:i') }}
+                                                {% endif %}
+                                            </small>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">Aucun commentaire pour le moment.</p>
+                            {% endif %}
+
+                            <!-- Bouton pour ajouter un commentaire -->
+                                <div class="mt-3">
+                                    <a href="{{ path('app_comments_new', {'postId': forum_post.id}) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-comment"></i> Ajouter un commentaire
+                                    </a>
+                                </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions (show, edit, pin) -->
+                    <!-- Actions (show, edit, pin) -->
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ path('app_forum_posts_show', {'id': forum_post.id}) }}" class="btn btn-info btn-sm me-2">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ path('app_forum_posts_edit', {'id': forum_post.id}) }}" class="btn btn-warning btn-sm me-2">
+                                <i class="fas fa-edit"></i> 
+                            </a>
+                            <!-- Bouton pour épingler/désépingler -->
+                            <form action="{{ path('app_forum_posts_pin', {'id': forum_post.id}) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm {{ forum_post.isPinned ? 'btn-outline-danger' : 'btn-outline-secondary' }}">
+                                    <i class="fas fa-thumbtack"></i> {{ forum_post.isPinned }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    Aucun post trouvé.
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+<!-- Pagination for forum posts -->
+<div class="navigation">
+    {{ knp_pagination_render(forum_posts,'@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+</div>
+   {% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            // Écouteur d'événement sur le champ de recherche
+            $('#searchInput').on('input', function () {
+                const searchQuery = $(this).val(); // Récupère la valeur du champ de recherche
+
+                // Envoie une requête AJAX au serveur
+                $.ajax({
+                    url: '{{ path('app_forum_posts_index') }}', // URL de la route Symfony
+                    method: 'GET',
+                    data: { search: searchQuery }, // Envoie la requête de recherche
+                    success: function (response) {
+                        // Met à jour la liste des posts avec les résultats de la recherche
+                        const postsContainer = $(response).find('#postsContainer').html();
+                        $('#postsContainer').html(postsContainer);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Erreur lors de la recherche :', error);
+                    }
+                });
+            });
+        });
+    </script>
+     <script>
+        $(document).ready(function () {
+    // Gestion du bouton "Like"
+    $('.like-btn').on('click', function (e) {
+        e.preventDefault(); // Empêche la soumission du formulaire
+
+        const postId = $(this).data('post-id'); // Récupère l'ID du post
+        const url = "{{ path('app_forum_posts_like', {'id': 'POST_ID'}) }}".replace('POST_ID', postId);
+        const token = $(this).closest('form').find('input[name="_token"]').val(); // Récupère le token CSRF
+
+        // Envoie une requête AJAX
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                _token: token,
+            },
+            success: function (response) {
+                // Met à jour le nombre de likes affiché avec le texte "Likes"
+                $(`#likes-count-${postId}`).text(response.likes + " Likes");
+            },
+            error: function (xhr, status, error) {
+                console.error('Erreur lors du like :', error);
+            }
+        });
+    });
+
+    // Gestion du bouton "Dislike"
+    $('.dislike-btn').on('click', function (e) {
+        e.preventDefault(); // Empêche la soumission du formulaire
+
+        const postId = $(this).data('post-id'); // Récupère l'ID du post
+        const url = "{{ path('app_forum_posts_dislike', {'id': 'POST_ID'}) }}".replace('POST_ID', postId);
+        const token = $(this).closest('form').find('input[name="_token"]').val(); // Récupère le token CSRF
+
+        // Envoie une requête AJAX
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                _token: token,
+            },
+            success: function (response) {
+                // Met à jour le nombre de dislikes affiché avec le texte "Dislikes"
+                $(`#dislikes-count-${postId}`).text(response.dislikes + " Dislikes");
+            },
+            error: function (xhr, status, error) {
+                console.error('Erreur lors du dislike :', error);
+            }
+        });
+    });
+});
+    </script>
+{% endblock %}
+{% endblock %}

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin | Dashboard</title>
 
+<link href="{{ asset('assets/img/logo1.png') }}" rel="icon">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -29,6 +30,41 @@
     
   {% endblock %}
 </head>
+<style>
+			/* Ajoutez ceci dans votre fichier CSS ou dans une balise <style> dans base2.html.twig */
+			.card {
+				border-radius: 10px;
+				transition: transform 0.2s;
+			}
+
+			.card:hover {
+				transform: translateY(-5px);
+			}
+
+			.card-title {
+				font-size: 1.2rem;
+				font-weight: bold;
+			}
+
+			.display-4 {
+				font-size: 2.5rem;
+				font-weight: bold;
+			}
+
+			.table {
+				border-radius: 10px;
+				overflow: hidden;
+			}
+
+			.table thead th {
+				background-color: #343a40;
+				color: white;
+			}
+
+			.table tbody tr:hover {
+				background-color: #f8f9fa;
+			}
+		</style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
@@ -50,6 +86,7 @@
     <ul class="navbar-nav ml-auto">
       <!-- Navbar Search -->
       <li class="nav-item">
+      
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="fas fa-search"></i>
         </a>
@@ -239,7 +276,39 @@
                 Statistiques
               </p>
             </a>
+            
           </li>
+          		<li>
+                <a class="nav-link" href="{{ path('app_res_statistics') }}">
+								<i class="fas fa-chart-bar"></i>
+								Statistiques de Réservation
+							</a>
+          		</li>
+          <li class="nav-item">
+									<a href="{{path('backk')}}" class="nav-link">
+
+										<i class="nav-icon fas fa-columns"></i>
+										<p>
+											list vehicule
+										</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{{path('app_res_index')}}" class="nav-link">
+										<i class="nav-icon fas fa-columns"></i>
+										<p>
+											vehicules reservee
+										</p>
+									</a>
+								</li>
+                <li class="nav-item">
+                  <a href="{{ path('app_admin_forum_posts') }}" class="nav-link">
+                    <i class="nav-icon fas fa-columns"></i>
+                    <p>
+                    Forum
+                    </p>
+                  </a>
+                </li>
           
         </ul>
       </nav>

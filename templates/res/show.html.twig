@@ -1,0 +1,38 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}ReservationVehicule{% endblock %}
+
+{% block body %}
+    <h1>ReservationVehicule</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ reservation_vehicule.id }}</td>
+            </tr>
+            <tr>
+                <th>Date_debut</th>
+                <td>{{ reservation_vehicule.dateDebut ? reservation_vehicule.dateDebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Date_fin</th>
+                <td>{{ reservation_vehicule.dateFin ? reservation_vehicule.dateFin|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Prix_total</th>
+                <td>{{ reservation_vehicule.prixTotal }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ reservation_vehicule.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_res_index') }}">back to list</a>
+
+    <a href="{{ path('app_res_edit', {'id': reservation_vehicule.id}) }}">edit</a>
+
+    {{ include('res/_delete_form.html.twig') }}
+{% endblock %}

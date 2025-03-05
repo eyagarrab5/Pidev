@@ -1,0 +1,22 @@
+{# templates/vehicule/new.html.twig #}
+{% extends 'base2.html.twig' %}
+
+{% block body %}
+    
+    <h1 class="text-center my-4">Ajouter un nouveau véhicule</h1>
+
+ {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+        {{ form_row(form.type_vehicule) }}
+        {{ form_row(form.modele) }}
+        {{ form_row(form.role) }}
+        {{ form_row(form.prix_par_heure) }}
+        {{ form_row(form.prix_par_jour) }}
+        {{ form_row(form.disponibilite) }}
+        {{ form_row(form.lieu_retrait) }}
+        {{ form_row(form.image) }}
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
+
+    
+{% endblock %}

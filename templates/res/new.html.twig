@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Réservation{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+   <div class="row align-items-stretch shadow-lg rounded-4 p-5" 
+     style="max-width: 900px; width: 100%; background: #fff; min-height: 600px;">
+
+        <!-- Left Side: Image -->
+        <div class="col-md-5 d-flex align-items-stretch" style="background: #f8f9fa; border-radius: 5px;">
+    <img src="{{ asset('img/pic7.jpg') }}" alt="Illustration" class="img-fluid w-100 h-100" style="object-fit: cover; border-radius: 5px;">
+</div>
+
+
+        <!-- Right Side: Form -->
+        <div class="col-md-7 d-flex flex-column justify-content-center" style="padding: 20px;">
+            <h2 class="fw-bold text-primary text-center mb-3">Nouvelle Réservation</h2>
+        {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+                <div class="mb-3">
+                    {{ form_label(form.date_debut, 'Date de début') }}
+                    {{ form_widget(form.date_debut, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez la date'}}) }}
+                    {{ form_errors(form.date_debut) }} {# Ajout de l'affichage des erreurs #}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.date_fin, 'Date de fin') }}
+                    {{ form_widget(form.date_fin, {'attr': {'class': 'form-control', 'placeholder': 'Sélectionnez la date'}}) }}
+                    {{ form_errors(form.date_fin) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.prix_total, 'Prix Total') }}
+                    {{ form_widget(form.prix_total, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prix'}}) }}
+                     {{ form_errors(form.prix_total) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.status, 'Statut') }}
+                    {{ form_widget(form.status, {'attr': {'class': 'form-control', 'placeholder': 'Statut de la réservation'}}) }}
+                    {{ form_errors(form.status) }}
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-primary btn-lg">{{ button_label|default('Réserver') }}</button>
+                </div>
+            {{ form_end(form) }}
+            <div class="text-center mt-3">
+                <a href="{{ path('app_vehicule_index') }}" class="text-decoration-none">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
