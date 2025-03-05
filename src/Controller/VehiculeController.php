@@ -61,13 +61,31 @@ if ($search) {
         6 // Nombre d'éléments par page
     );
     if ($request->isXmlHttpRequest()) {
-        return $this->render('vehicule/index.html.twig', [
-            'vehicules' => $vehicules,
+        $vehiculesArray = [];
+        foreach ($vehicules as $vehicule) {
+            $vehiculesArray[] = [
+                'id' => $vehicule->getId(),
+                'typeVehicule' => $vehicule->getTypeVehicule(),
+                'modele' => $vehicule->getModele(),
+                'role' => $vehicule->getRole(),
+                'prixParHeure' => $vehicule->getPrixParHeure(),
+                'prixParJour' => $vehicule->getPrixParJour(),
+                'disponibilite' => $vehicule->getDisponibilite(),
+                'lieuRetrait' => $vehicule->getLieuRetrait(),
+                'image' => $vehicule->getImage(),
+                'likes' => $vehicule->getLikes(),
+                'dislikes' => $vehicule->getDislikes(),
+                'isPinned' => $vehicule->isPinned(),
+            ];
+        }
+
+        return $this->json([
+            'vehicules' => $vehiculesArray,
             'pinnedVehicules' => $pinnedVehicules,
         ]);
     }
 
-
+    // Sinon, renvoyer la page complète
     return $this->render('vehicule/index.html.twig', [
         'vehicules' => $vehicules,
         'pinnedVehicules' => $pinnedVehicules,
@@ -103,6 +121,9 @@ if ($search) {
                     return $this->redirectToRoute('app_vehicule_new');
                 }
             }
+
+             // Ajouter une notification pour la création du véhicule
+            $vehicule->addNotification('Nouveau véhicule reservé: ' .$vehicule->getTypeVehicule(), $vehicule->getModele());
 
             $entityManager->persist($vehicule);
             $entityManager->flush();
@@ -196,20 +217,31 @@ public function generatePdf(Vehicule $vehicule): Response
 }
 
 #[Route('/vehicule/search', name: 'app_vehicule_search', methods: ['GET'])]
-public function search(Request $request, VehiculeRepository $vehiculeRepository): Response
+public function search(Request $request, VehiculeRepository $vehiculeRepository, PaginatorInterface $paginator): Response
 {
     // Récupérer le terme de recherche depuis la requête
     $query = $request->query->get('q', '');
-
+    dump("Terme de recherche : " . $query); 
     // Rechercher les véhicules correspondants
     $vehicules = $vehiculeRepository->search($query);
+// Rechercher les véhicules correspondants
+$vehicules = $vehiculeRepository->search($query);
+dump("Nombre de résultats : " . count($vehicules)); // Affiche le nombre de résultats
 
-    // Retourner la vue partielle avec les résultats
-    return $this->render('vehicule/_vehicules.html.twig', [
+    // Paginer les résultats (si nécessaire)
+    $vehicules = $paginator->paginate(
+        $vehicules,
+        $request->query->getInt('page', 1), // Numéro de page par défaut
+        6 // Nombre d'éléments par page
+    );
+
+    // Retourner la vue index.html.twig avec les résultats de la recherche
+    return $this->render('vehicule/index.html.twig', [
         'vehicules' => $vehicules,
+        'pinnedVehicules' => [], // Vous pouvez passer une liste vide ou filtrer les épinglés si nécessaire
+        'sort_by' => 'id', // Ou tout autre critère de tri par défaut
     ]);
 }
-
 // src/Controller/VehiculeController.php
 
 #[Route('/vehicule/{id}/pin', name: 'app_vehicule_pin', methods: ['POST'])]
@@ -224,5 +256,25 @@ public function pin(Vehicule $vehicule, EntityManagerInterface $entityManager): 
     // Rediriger vers la liste des véhicules
     return $this->redirectToRoute('app_vehicule_index');
 }
-    
+   
+// src/Controller/VehiculeController.php
+
+#[Route('/vehicule/{id}/like', name: 'app_vehicule_like', methods: ['POST'])]
+public function like(Vehicule $vehicule, EntityManagerInterface $entityManager): Response
+{
+    $vehicule->setLikes($vehicule->getLikes() + 1);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('app_vehicule_index', ['id' => $vehicule->getId()]);
+}
+
+#[Route('/vehicule/{id}/dislike', name: 'app_vehicule_dislike', methods: ['POST'])]
+public function dislike(Vehicule $vehicule, EntityManagerInterface $entityManager): Response
+{
+    $vehicule->setDislikes($vehicule->getDislikes() + 1);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('app_vehicule_index', ['id' => $vehicule->getId()]);
+}
+
 }

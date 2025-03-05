@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_comments_delete', {'id': forum_post.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum_post.id) }}">
+    <button type="submit" class="btn-delete">
+        <i class="fas fa-trash"></i> 
+    </button>
+</form>

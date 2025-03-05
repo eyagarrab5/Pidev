@@ -52,6 +52,8 @@ final class ResController extends AbstractController
 
         // Handle form submission
         if ($form->isSubmitted() && $form->isValid()) {
+            // Ajouter une notification
+        $reservationVehicule->addNotification('Nouvelle réservation pour le véhicule : ' . $vehicule->getTypeVehicule());
             // Save the reservation to the database
             $entityManager->persist($reservationVehicule);
             $entityManager->flush();
@@ -64,6 +66,7 @@ final class ResController extends AbstractController
         return $this->render('res/new.html.twig', [
             'reservation_vehicule' => $reservationVehicule,
             'form' => $form->createView(),
+            'vehicule' => $vehicule,
         ]);
     }
 

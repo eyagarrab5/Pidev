@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories du Forum{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        .category-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-card .card-body {
+            padding: 20px;
+        }
+
+        .category-card .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .category-card .list-group-item {
+            border: none;
+            padding: 10px 0;
+        }
+
+        .category-card .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+
+    <div class="container">
+        <h1 class="text-center my-4">Catégories du Forum</h1>
+        {% for mainCategory, subCategories in categories %}
+            <div class="card category-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ mainCategory }}</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for subCategory in subCategories %}
+                            <li class="list-group-item">
+                                <!-- Rediriger vers la page index avec la catégorie sélectionnée -->
+                                <a href="{{ path('app_forum_posts_index', {'category': subCategory}) }}" class="text-decoration-none">
+                                    {{ subCategory }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

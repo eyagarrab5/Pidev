@@ -3,7 +3,65 @@
 {% block title %}ReservationVehicule index{% endblock %}
 
 {% block body %}
+<style>
+    /* Conteneur des notifications */
+    .notification-container {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    /* Style de chaque notification */
+    .notification {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 10px;
+        width: 300px;
+        position: relative;
+        animation: slideIn 0.5s ease-out;
+    }
+
+    /* Bouton de fermeture */
+    .notification .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #888;
+    }
+
+    .notification .close-btn:hover {
+        color: #333;
+    }
+
+    /* Animation pour l'apparition des notifications */
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+   </style> 
     <h1>ReservationVehicule index</h1>
+
+    <!-- Section des notifications -->
+    <div class="notification-container">
+        {% for reservation_vehicule in reservation_vehicules %}
+            {% for notification in reservation_vehicule.notifications %}
+                <div class="notification" data-notification-id="{{ loop.index }}">
+                    <span>{{ notification.message }}</span>
+                    <button class="btn-close close-btn" aria-label="Close" onclick="removeNotification(this)"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
 
     <table class="table">
         <thead>
@@ -38,4 +96,25 @@
     </table>
 
     <a href="{{ path('app_res_new') }}">Create new</a>
+    {% block javascripts %}
+        <script>
+            function removeNotification(button) {
+                let notification = button.closest('.notification');
+                if (notification) {
+                    notification.style.animation = "fadeOut 0.5s";
+                    setTimeout(() => notification.remove(), 500);
+                }
+            }
+
+            // Ajout d'une animation de disparition
+            document.head.insertAdjacentHTML("beforeend", `
+                <style>
+                    @keyframes fadeOut {
+                        from { opacity: 1; transform: translateX(0); }
+                        to { opacity: 0; transform: translateX(100%); }
+                    }
+                </style>
+            `);
+        </script>
+    {% endblock %}
 {% endblock %}

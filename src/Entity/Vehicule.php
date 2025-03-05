@@ -95,6 +95,15 @@ class Vehicule
     #[ORM\OneToOne(mappedBy: 'id_vehicule', cascade: ['persist', 'remove'])]
     private ?ReservationVehicule $reservationVehicule = null;
 
+    #[ORM\Column(type: 'json')]
+    private array $notifications = [];
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $likes = 0;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $dislikes = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +199,7 @@ class Vehicule
     }
     #[ORM\Column(type: "boolean", options: ["default" => false])]
     private bool $isPinned = false;
+
     public function isPinned(): bool
 {
     return $this->isPinned;
@@ -218,18 +228,65 @@ public function setImage(?string $image): self
 
     public function setReservationVehicule(?ReservationVehicule $reservationVehicule): static
     {
-        // unset the owning side of the relation if necessary
-        if ($reservationVehicule === null && $this->reservationVehicule !== null) {
+       // Si la réservation est différente de celle actuellement associée
+    if ($this->reservationVehicule !== $reservationVehicule) {
+        // Détacher l'ancienne réservation
+        if ($this->reservationVehicule !== null) {
             $this->reservationVehicule->setIdVehicule(null);
         }
 
-        // set the owning side of the relation if necessary
-        if ($reservationVehicule !== null && $reservationVehicule->getIdVehicule() !== $this) {
-            $reservationVehicule->setIdVehicule($this);
-        }
-
+        // Attacher la nouvelle réservation
         $this->reservationVehicule = $reservationVehicule;
 
+        // Mettre à jour la relation inverse
+        if ($reservationVehicule !== null) {
+            $reservationVehicule->setIdVehicule($this);
+        }
+    }
+
+    return $this;
+    }
+
+    public function getNotifications(): array
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(string $message): self
+    {
+        $this->notifications[] = [
+            'message' => $message,
+            'createdAt' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
         return $this;
     }
+
+    public function clearNotifications(): self
+    {
+        $this->notifications = [];
+        return $this;
+    }
+
+    
+public function getLikes(): int
+{
+    return $this->likes;
+}
+
+public function setLikes(int $likes): self
+{
+    $this->likes = $likes;
+    return $this;
+}
+
+public function getDislikes(): int
+{
+    return $this->dislikes;
+}
+
+public function setDislikes(int $dislikes): self
+{
+    $this->dislikes = $dislikes;
+    return $this;
+}
 }

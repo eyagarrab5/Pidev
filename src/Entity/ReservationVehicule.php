@@ -52,6 +52,11 @@ class ReservationVehicule
     #[ORM\OneToOne(inversedBy: 'reservationVehicule', cascade: ['persist', 'remove'])]
     private ?Vehicule $id_vehicule = null;
 
+    
+    #[ORM\Column(type: 'json')]
+    private array $notifications = [];
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -101,7 +106,6 @@ class ReservationVehicule
     public function setStatus(?string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -114,6 +118,31 @@ class ReservationVehicule
     {
         $this->id_vehicule = $id_vehicule;
 
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->notifications = [];
+    }
+
+    public function getNotifications(): array
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(string $message): self
+    {
+        $this->notifications[] = [
+            'message' => $message,
+            'createdAt' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
+        return $this;
+    }
+
+    public function clearNotifications(): self
+    {
+        $this->notifications = [];
         return $this;
     }
 }

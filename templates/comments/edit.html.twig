@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le commentaire{% endblock %}
+
+{% block body %}
+    <h1>Modifier</h1>
+
+    {{ include('forum_posts/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    <a href="{{ path('app_forum_posts_index') }}">Retourner à la liste</a>
+
+    {{ include('comments/_delete_form.html.twig') }}
+{% endblock %}

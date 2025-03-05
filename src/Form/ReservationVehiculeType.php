@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 class ReservationVehiculeType extends AbstractType
 {
@@ -24,7 +26,17 @@ class ReservationVehiculeType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('prix_total')
-            ->add('status')
+            ->add('status', ChoiceType::class, [
+                'label' => 'Statut',
+                'choices' => [
+                    'confirmée' => 'confirmée',
+                ],
+                'placeholder' => 'Choisissez un statut',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+            ])
+            
            ;
     }
 
