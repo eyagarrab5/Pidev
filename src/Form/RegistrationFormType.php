@@ -29,12 +29,12 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('first_name', TextType::class, [
-                'label' => 'First Name',
+                'label' => 'first_name',
                 'attr' => ['class' => 'form-control'],
                 'required' => false, // Facultatif
             ])
             ->add('last_name', TextType::class, [
-                'label' => 'Last Name',
+                'label' => 'last_name',
                 'attr' => ['class' => 'form-control'],
                 'required' => false, // Facultatif
             ])

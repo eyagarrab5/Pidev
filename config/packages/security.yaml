@@ -20,15 +20,16 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                default_target_path: app_home  # Assurez-vous que cette route existe
+                default_target_path: profile_index  # Assurez-vous que cette route existe
 
             logout:
                 path: app_logout
-                target: app_home
+                target: app_login
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/profile, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
+        

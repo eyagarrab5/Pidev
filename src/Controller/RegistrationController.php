@@ -29,7 +29,6 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $user->setRole($form->get('role')->getData()); // Définir le rôle à partir du formulaire
             $user->setAuthMethod($form->get('auth_method')->getData()); // Définir auth_method à partir du formulaire
 
             $entityManager->persist($user);

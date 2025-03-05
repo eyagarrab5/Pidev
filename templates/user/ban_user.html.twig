@@ -1,0 +1,15 @@
+{# templates/ban_user.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Bannir un utilisateur{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Bannir {{ user.userEmail }}</h1>
+
+        {{ form_start(form) }}
+            {{ form_row(form.bannedUntil) }}
+            <button type="submit" class="btn btn-danger">Bannir</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

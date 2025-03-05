@@ -38,6 +38,130 @@
         border-radius: 50%;
         object-fit: cover;
     }
+    /* Si votre navbar a une marge ou un padding par défaut */
+.navbar {
+    margin-bottom: 0; /* Supprimer la marge inférieure */
+    padding-bottom: 0; /* Supprimer le padding inférieur */
+}
+
+/* Si votre contenu a une marge ou un padding par défaut */
+.content {
+    margin-top: 0; /* Supprimer la marge supérieure */
+    padding-top: 0; /* Supprimer le padding supérieur */
+}
+
+.logo img {
+    width: 100px; /* Largeur */
+    height: 100px; /* Hauteur (identique à la largeur) */
+    object-fit: cover; /* Pour s'assurer que l'image remplit le carré */
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        width: 150px; /* Taille réduite pour les écrans plus petits */
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        width: 100px; /* Taille encore plus petite pour les mobiles */
+    }
+}
+
+/* Style pour la navigation */
+.navmenu {
+    float: right; /* Aligner la navigation à droite */
+}
+/* Supprimer ou réduire la marge et le padding de la navbar */
+.header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Supprimer ou réduire la marge et le padding du contenu principal */
+.main {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
+
+
+/* Ajuster les marges des éléments de la liste de navigation */
+.navmenu ul li {
+    margin-left: 10px; /* Réduire l'espacement entre les éléments */
+}
+/* Style pour la liste de navigation */
+.navmenu ul {
+    list-style: none; /* Supprimer les puces */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Aligner les éléments horizontalement */
+    align-items: center;
+}
+
+/* Style pour les éléments de la liste */
+.navmenu ul li {
+    margin-left: 20px; /* Espacement entre les éléments */
+}
+
+/* Style pour les liens de navigation */
+.navmenu ul li a {
+    color: #007bff; /* Couleur du texte */
+    text-decoration: none; /* Supprimer le soulignement */
+    font-weight: 500; /* Poids de la police */
+}
+
+/* Style pour le survol des liens */
+.navmenu ul li a:hover {
+    text-decoration: underline; /* Souligner au survol */
+}
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.navbar-image {
+    height: 50px; /* Ajustez la taille selon vos besoins */
+    border-radius: 50%; /* Pour un effet de cercle */
+}
+
+.profile-image {
+    max-width: 100%;
+    height: 50px;
+    border-radius: 50%; /* Pour un effet de cercle */
+}
+/* Style pour la navbar */
+.navbar {
+    background-color: #ffffff;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    width: 100%;
+}
+
+/* Style pour le logo */
+.logo {
+    margin-right: auto;
+}
+
+/* Style pour la photo de profil */
+.navbar-logo {
+    margin-left: auto;
+}
+
+/* Style pour l'image de profil */
+.navbar-image {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
     </style>
 
   <meta charset="utf-8">
@@ -70,44 +194,41 @@
 </head>
 
 <body class="index-page scrolled">
-
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
-
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="{{ asset('assets/img/logo.png') }}" alt=""> -->
-        <h1 style="color: #07005a;">CovoitMob</h1>
-
-        <!-- User Profile Section -->
-        <div class="user-profile">
-            {% if app.user %}
-                <a href="{{ path('app_profile') }}">
-<img src="{{ asset('uploads/photos/' ~ app.user.image) }}" 
-     alt="Photo de l'utilisateur" 
-         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; position: absolute; top: 50%; right: 10px; transform: translateY(-50%);">
-                </a>
-            {% endif %}
+ <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between" style="padding: 0; margin: 0;">
+        <!-- Logo à gauche -->
+        <div class="logo">
+            <img src="{{ asset('assetsFB/images/logos/covoitmob_logo.jpg') }}" alt="Logo CovoitMob">
         </div>
 
-      </a>
-    {% block navbar %}
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          
-           <li><a href="{{ path('app_home') }}">Accueil</a></li>
-        {% if is_granted('ROLE_ADMIN') %}
-            <li><a href="{{ path('user_index') }}">Dashboard</a></li>
+       <!-- Photo de profil avec menu déroulant -->
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        {% if user.image %}
+            <img src="{{ user.image }}" alt="Photo de profil" class="navbar-image">
+        {% else %}
+            <img src="{{ asset('img/default-profile-photo.jpg') }}" alt="Photo de profil par défaut" class="navbar-image">
         {% endif %}
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        
-        
-      </nav>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="{{ path('profile_index') }}">Mon Profil</a></li>
+        <li><a class="dropdown-item" href="{{ path('app_login') }}">Déconnexion</a></li>
+    </ul>
+</div>
 
     </div>
-   {% endblock %}
 
-  </header>
+            <ul>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('user_index') }}">Dashboard</a></li>
+                {% endif %}
+            </ul>
+    </div>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            
+        </nav>
+    </div>
+</header>
 
   <main class="main">
     {% block body %}{% endblock %}

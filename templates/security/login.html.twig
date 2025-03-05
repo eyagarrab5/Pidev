@@ -35,13 +35,8 @@
                     
                     <input type="password" id="password" name="_password" class="form-control" autocomplete="current-password" required>
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
-                            <label class="form-check-label text-dark" for="flexCheckChecked">
-                                Remember this Device
-                            </label>
-                        </div>
+								<a href="{{ path('password_request') }}">Mot de passe oublié?</a>
+
                     </div>
                     <button class="btn btn-lg btn-primary w-100" type="submit">Sign in</button>
                     <div class="d-flex align-items-center justify-content-center">

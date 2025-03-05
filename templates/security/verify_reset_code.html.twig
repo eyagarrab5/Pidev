@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialisation du mot de passe{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 d-flex justify-content-center">
+        <div class="card" style="max-width: 400px; width: 100%;">
+            <div class="card-body">
+                <h2 class="card-title text-center">Vérification du code de réinitialisation</h2>
+                <form action="{{ path('password_verify') }}" method="POST">
+                    <input type="hidden" name="numTel" value="{{ numTel }}">
+
+                    <div class="mb-3">
+                        <label for="resetCode" class="form-label">Entrez le code de réinitialisation</label>
+                        <input type="text" id="resetCode" name="resetCode" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Vérifier le code</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

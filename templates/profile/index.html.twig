@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+  {% block title %}
+    Profil de {% if user %}{{ user.getFirstName() }} {{ user.getLastName() }}{% else %}Utilisateur inconnu{% endif %}
+{% endblock %}
+{% block body %}
+   <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .profile-header {
+            margin-bottom: 30px;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #007bff;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.1);
+            border-color: #0056b3;
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            margin: 10px 0;
+            color: #333;
+            font-weight: bold;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .profile-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .profile-info p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 15px 0;
+            color: #555;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .profile-info p:hover {
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 10px;
+            transform: translateX(10px);
+        }
+
+        .profile-info strong {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .btn-edit-profile {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .btn-edit-profile:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-edit-profile:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+   <div class="profile-container">
+    <div class="profile-header">
+        {% if user.image %}
+            <img src="{{ user.image }}" alt="Photo de profil" class="profile-image">
+        {% else %}
+            <img src="{{ asset('img/default-profile-photo.jpg') }}" alt="Photo de profil par défaut" class="profile-image">
+        {% endif %}
+
+            <!-- Nom complet de l'utilisateur -->
+            <h1 class="profile-name">{{ user.getFirstName() }} {{ user.getLastName() }}</h1>
+        </div>
+
+        <!-- Informations de l'utilisateur -->
+        <div class="profile-info">
+            <p><strong>Votre Nom:</strong> {{ user.getFirstName() }}</p>
+            <p><strong>Votre Prénom:</strong> {{ user.getLastName() }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Téléphone:</strong> {{ user.telephone ?? 'Non renseigné' }}</p>
+            <p><strong>Véhicule:</strong> {{ user.vehicule ?? 'Non renseigné' }}</p>
+
+        </div>
+
+        <!-- Bouton pour accéder à la page de modification -->
+ <!-- Formulaire d'édition du profil -->
+        <h2>Modifier le profil</h2>
+        {{ form_start(profileForm) }}
+    {{ form_row(profileForm.first_name) }}
+    {{ form_row(profileForm.last_name) }}
+    {{ form_row(profileForm.telephone) }}
+    {{ form_row(profileForm.vehicule) }}
+    {{ form_row(profileForm.image) }}
+
+    <button type="submit" class="btn-edit-profile">Enregistrer les modifications</button>
+{{ form_end(profileForm) }}
+            </div>
+{% endblock %}
+
+
+

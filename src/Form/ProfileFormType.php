@@ -14,14 +14,12 @@ class ProfileFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstName', TextType::class, [
-                'label' => 'Prénom',
-                'required' => false,
-            ])
-            ->add('lastName', TextType::class, [
-                'label' => 'Nom',
-                'required' => false,
-            ])
+        ->add('first_name', TextType::class, [
+            'label' => 'Prénom',
+        ])
+        ->add('last_name', TextType::class, [
+            'label' => 'Nom',
+        ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',
                 'required' => false,
@@ -30,11 +28,11 @@ class ProfileFormType extends AbstractType
                 'label' => 'Véhicule',
                 'required' => false,
             ])
-            ->add('imageFile', FileType::class, [
-                'label' => 'Photo de profil',
+            ->add('image', TextType::class, [
+                'label' => 'URL de la photo de profil',
                 'required' => false,
-                'mapped' => false, // Ce champ n'est pas mappé directement à l'entité
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

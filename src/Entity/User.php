@@ -29,23 +29,85 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $verified = false;
+    
 
-    #[ORM\Column]
-    private ?bool $banned = false;
+
+   
 
     #[ORM\Column(length: 255, nullable: true)]
+
+    #[Assert\Url(message: "L'URL de l'image doit être une URL valide.")]
+    #[Assert\Regex(
+        pattern: "/^https:\/\/unsplash\.com\/.*$/",
+        message: "L'image doit provenir du site Unsplash (ex: https://unsplash.com/...)."
+    )]
+    private ?string $image = null;
+
+    #[ORM\Column(type: "string", length: 20, nullable: true)]
+    #[Assert\Regex(
+        pattern: "/^[A-Z]{2}-\d{3}-[A-Z]{2}$/",
+        message: "Le numéro de véhicule doit être au format valide (ex: AB-123-CD)."
+    )]
+    private ?string $vehicule = null;
+
+    #[ORM\Column(type: "string", length: 20, nullable: true)]
+    #[Assert\Regex(
+        pattern: "/^\+216\d{8}$/",
+        message: "Le numéro de téléphone doit commencer par +216 et contenir 8 chiffres supplémentaires (ex: +21612345678)."
+    )]
+    private ?string $telephone = '+216'; // Valeur par défaut
+
+   
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le prénom ne doit pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-']+$/",
+        message: "Le prénom ne peut contenir que des lettres, des espaces, des tirets et des apostrophes."
+    )]
     private ?string $first_name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $last_name = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: "Le nom de famille est obligatoire.")]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: "Le nom de famille doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom de famille ne doit pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ\s\-']+$/",
+        message: "Le nom de famille ne peut contenir que des lettres, des espaces, des tirets et des apostrophes."
+    )]
+    private ?string $last_name = null; 
 
-    #[ORM\Column(length: 255, nullable: true)]
-private ?string $image = null; // Autorise les valeurs nulles et définit null comme valeur par défaut
-#[ORM\Column(type: "string", length: 20, nullable: true)]
-private $telephone;
-#[ORM\Column(type: "string", length: 20, nullable: true)]
+    
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
 
-    private ?string $vehicule = null;
+    public function setFirstName(?string $first_name): self
+    {
+        $this->first_name = $first_name;
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(?string $last_name): self
+    {
+        $this->last_name = $last_name;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -111,43 +173,7 @@ private $telephone;
 
         return $this;
     }
-
-    public function isBanned(): ?bool
-    {
-        return $this->banned;
-    }
-
-    public function setBanned(bool $banned): static
-    {
-        $this->banned = $banned;
-
-        return $this;
-    }
-
-    public function getFirstName(): ?string
-    {
-        return $this->first_name;
-    }
-
-    public function setFirstName(?string $first_name): static
-    {
-        $this->first_name = $first_name;
-
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->last_name;
-    }
-
-    public function setLastName(?string $last_name): static
-    {
-        $this->last_name = $last_name;
-
-        return $this;
-    }
-
+    
     public function getImage(): ?string
     {
         return $this->image;
