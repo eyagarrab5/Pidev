@@ -23,12 +23,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 50)]
     private ?string $role = 'ROLE_USER';
+    #[ORM\Column(type: 'boolean')]
+private bool $banned = false;
 
     #[ORM\Column(length: 255)]
     private ?string $auth_method = 'email';
 
     #[ORM\Column]
     private ?bool $verified = false;
+    
     
 
 
@@ -125,7 +128,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
+    public function isBanned(): bool
+    {
+        return $this->banned;
+    }
+    
+    public function setBanned(bool $banned): self
+    {
+        $this->banned = $banned;
+        return $this;
+    }
     public function getPasswordHash(): ?string
     {
         return $this->password_hash;

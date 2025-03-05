@@ -10,3 +10,11 @@ app_login:
 password_request:
     path: /password/request
     controller: App\Controller\ResetPasswordController::requestReset
+# config/routes.yaml
+index:
+    path: /
+    controller: App\Controller\StarterPageController::index
+
+starter_page:
+    path: /starter_page
+    controller: App\Controller\StarterPageController::starterPage

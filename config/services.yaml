@@ -6,12 +6,17 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        public: true  # <---- Assure-toi que cette ligne est bien présente
 
     App\Service\SmsService:
         arguments:
             $nexmoApiKey: '%env(NEXMO_API_KEY)%'
             $nexmoApiSecret: '%env(NEXMO_API_SECRET)%'
             $brandName: '%env(NEXMO_BRAND_NAME)%'
+
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']  # <---- Correction d'indentation ici
 
     App\:
         resource: '../src/'

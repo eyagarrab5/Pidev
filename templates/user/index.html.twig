@@ -42,13 +42,7 @@
                                 <span class="badge bg-danger">Non</span>
                             {% endif %}
                         </td>
-                        <td>
-                            {% if user.banned %}
-                                <span class="badge bg-danger">Banni</span>
-                            {% else %}
-                                <span class="badge bg-success">Actif</span>
-                            {% endif %}
-                        </td>
+                
                         <td>
                             <!-- Bouton Supprimer l'utilisateur -->
                             <form action="{{ path('user_delete', {'id': user.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" class="d-inline">
