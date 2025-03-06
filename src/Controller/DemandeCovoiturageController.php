@@ -100,8 +100,14 @@ public function indexAdmin(DemandeCovoiturageRepository $demandeCovoiturageRepos
     public function deleteAdmin(Request $request, DemandeCovoiturage $demandeCovoiturage, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $demandeCovoiturage->getId(), $request->getPayload()->getString('_token'))) {
+            // Récupérer l'ID avant la suppression
+            $idDemande = $demandeCovoiturage->getId();
+            
             $entityManager->remove($demandeCovoiturage);
             $entityManager->flush();
+            
+            // Utiliser l'ID stocké dans la variable
+            $this->addFlash('success', 'Vous avez supprimé la demande avec id ' . $idDemande);
         }
     
         return $this->redirectToRoute('app_demande_covoiturage_index_Admin', [], Response::HTTP_SEE_OTHER);

@@ -24,7 +24,6 @@ use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 final class OffreCovoiturageController extends AbstractController
 {
 
-    
     #[Route(name: 'app_offre_covoiturage_index', methods: ['GET'])]
     public function index(
         Request $request,
@@ -78,6 +77,16 @@ final class OffreCovoiturageController extends AbstractController
                 'sortFieldAllowList' => array_keys($allowedSorts)
             ]
         );
+    
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('offre_covoiturage/_list.html.twig', [
+                'pagination' => $pagination,
+                'current_sort' => [
+                    'field' => $sortField,
+                    'direction' => $sortDirection
+                ]
+            ]);
+        }
     
         return $this->render('offre_covoiturage/index.html.twig', [
             'pagination' => $pagination,

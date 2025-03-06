@@ -4,39 +4,51 @@
 
 {% block body %}
     <div class="container mt-4">
+        {# Flash messages section #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-dismissible fade show custom-alert" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>{{ message }}</span>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+
         <h1 class="text-center text-primary mb-4">Liste de toutes les demandes</h1>
         
         <table class="table table-bordered table-hover shadow-sm">
             <thead class="thead-dark bg-primary text-white">
                  <tr>
-                <th>Id Demande</th>
-                <th>Id Passager </th>
-                <th>Départ</th>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Budget</th>
-                <th>Statut</th>
-                <th>Actions</th>
+                    <th>Id Demande</th>
+                    <th>Id Passager </th>
+                    <th>Départ</th>
+                    <th>Destination</th>
+                    <th>Date</th>
+                    <th>Budget</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for demande_covoiturage in demande_covoiturages %}
-                      <tr>
-                    <td>{{ demande_covoiturage.id }}</td>
-                    <td>{{ demande_covoiturage.passagerid}}</td>
-                    <td>{{ demande_covoiturage.depart }}</td>
-                    <td>{{ demande_covoiturage.destination }}</td>
-                    <td>{{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}</td>
-                    <td>{{ demande_covoiturage.budget }} dt</td>
-                     <td>{{ demande_covoiturage.Statut.value }}</td>
-
-                    <td>
-                    {{ include('demande_covoiturage/_delete_form_Admin.html.twig') }}
-                    </td>
-                </tr>
+                    <tr>
+                        <td>{{ demande_covoiturage.id }}</td>
+                        <td>{{ demande_covoiturage.passagerid}}</td>
+                        <td>{{ demande_covoiturage.depart }}</td>
+                        <td>{{ demande_covoiturage.destination }}</td>
+                        <td>{{ demande_covoiturage.date ? demande_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}</td>
+                        <td>{{ demande_covoiturage.budget }} dt</td>
+                        <td>{{ demande_covoiturage.Statut.value }}</td>
+                        <td>
+                            {{ include('demande_covoiturage/_delete_form_Admin.html.twig') }}
+                        </td>
+                    </tr>
                 {% else %}
                     <tr>
-                        <td colspan="6" class="text-center text-muted">Aucune demande trouvée</td>
+                        <td colspan="8" class="text-center text-muted">Aucune demande trouvée</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -44,13 +56,32 @@
     </div>
 {% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .custom-alert {
+            background-color: #e0ffe0;
+            border-left: 5px solid #28a745;
+            color: #3c763d;
+            font-size: 1.1em;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInAlert 0.5s ease-in-out;
+        }
 
+        .custom-alert i {
+            font-size: 1.5em;
+            color: #28a745;
+        }
 
-
-
-
-
-
-
-
-
+        @keyframes fadeInAlert {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+{% endblock %}

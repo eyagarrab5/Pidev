@@ -34,7 +34,7 @@ class OffreCovoiturageType extends AbstractType
                 'required' => false,  
             ])
             ->add('brochure', FileType::class, [
-                'label' => "Image du cours",
+                'label' => "Image du véhicule",
                 'mapped' => false, // This ensures the field is not mapped to the entity
                 'required' => false,
                 'constraints' => [

@@ -1,0 +1,65 @@
+  <div class="row">
+        {% for offre_covoiturage in pagination %}
+            <div class="col-md-4 mb-4">
+                <div class="card custom-card shadow-lg" style="border: 20px solid #ecf4ff;">
+                    <div class="card-body">
+                        <h5 class="card-title">Mohammed 2</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">De {{ offre_covoiturage.depart }} à {{ offre_covoiturage.destination }}</h6>
+                        <p>
+                            <i class="fas fa-car" style="color: #007bff;"></i>
+                            <strong>Matricule:</strong> {{ offre_covoiturage.matVehicule }}<br>
+                            <i class="fas fa-users" style="color: #17a2b8;"></i>
+                            <strong>Places Disponibles:</strong> {{ offre_covoiturage.placesDispo }}<br>
+                            <i class="fas fa-calendar-alt" style="color: #007bff;"></i>
+                            <strong>Date:</strong> {{ offre_covoiturage.date ? offre_covoiturage.date|date('Y-m-d H:i:s') : 'Non spécifiée' }}<br>
+                            <i class="fas fa-wallet" style="color: #28a745;"></i>
+                            <strong>Prix:</strong> {{ offre_covoiturage.prix }} dt<br>
+                            <img src="{{ asset('uploads/' ~ offre_covoiturage.img) }}" 
+                                 class="covoiturage-image">
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ offre_covoiturage.id }}">
+                                Réserver
+                            </button>
+                            <button class="btn-favorite">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modale de confirmation -->
+            <div class="modal fade" id="confirmationModal{{ offre_covoiturage.id }}" tabindex="-1" aria-labelledby="confirmationModalLabel{{ offre_covoiturage.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmationModalLabel{{ offre_covoiturage.id }}">Confirmer la réservation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{ asset('img/confirmeReservation.jpg') }}" alt="Image de confirmation" class="img-fluid mb-3" style="border-radius: 8px; width: 200px; display: block; margin: 0 auto;">
+                            Êtes-vous sûr de vouloir réserver ce trajet de {{ offre_covoiturage.depart }} à {{ offre_covoiturage.destination }} le {{ offre_covoiturage.date|date('Y-m-d H:i:s') }} ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <a href="{{ path('app_reservation_new', {'id': offre_covoiturage.id}) }}" class="btn btn-primary">Confirmer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-danger">Aucune offre trouvée.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+<!-- Pagination -->
+<div class="mt-5 d-flex justify-content-center">
+    {{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig', {
+        'align': 'center',
+        'size': 'large',
+        'rounded': true,
+    }) }}
+</div>
